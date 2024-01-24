@@ -1,0 +1,29 @@
+[versions]
+spring-boot = "3.2.2"
+testcontainer = "1.19.1"
+
+[plugins]
+liquibase-plugin = { id = "org.liquibase.gradle", version = "2.2.0" }
+jooq-plugin = { id = "nu.studer.jooq", version = "8.2" }
+
+[libraries]
+#Spring lib
+spring-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+
+#Test lib
+testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainer" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainer" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainer" }
+
+#Jooq lib
+jooq-start = { module = "org.springframework.boot:spring-boot-starter-jooq", version.ref = "spring-boot" }
+jooq-codegen = { module = "org.jooq:jooq-codegen", version = "3.18.6" }
+
+#Database driver
+postgresql-driver = { module = "org.postgresql:postgresql", version = "42.6.0" }
+
+#Liquebase lib
+liquibase-core = { module = "org.liquibase:liquibase-core", version = "" }
+
+#Tomcat lib
+tomcat-annotations-api = { module = "org.apache.tomcat:annotations-api", version = "6.0.53" }

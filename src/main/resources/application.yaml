@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: default
+
+  liquibase:
+    default-schema: public
+    drop-first: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Shop
+    username: postgres
+    password: 1489qq
+    driver-class-name:  org.postgresql.Driver
+
+  jooq:
+    sql-dialect: postgres
+
