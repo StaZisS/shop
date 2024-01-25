@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changeset/init_table_product.sql
+  - include:
+      file: db/changelog/changeset/init_table_client.sql
+  - include:
+      file: db/changelog/changeset/init_table_review.sql

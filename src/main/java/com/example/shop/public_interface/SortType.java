@@ -1,6 +1,8 @@
-package com.example.shop.publicInterface;
+package com.example.shop.public_interface;
 
 import com.example.shop.core.product.repository.ProductCommonEntity;
+import com.example.shop.public_interface.exception.ExceptionInApplication;
+import com.example.shop.public_interface.exception.ExceptionType;
 
 import java.util.Comparator;
 
@@ -33,4 +35,12 @@ public enum SortType {
     },
     ;
     public abstract Comparator<ProductCommonEntity> getComparator();
+
+    public static SortType getSortTypeByName(String name) {
+        try {
+            return SortType.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            return SortType.DEFAULT;
+        }
+    }
 }

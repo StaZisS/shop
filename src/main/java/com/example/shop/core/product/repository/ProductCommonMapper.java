@@ -1,22 +1,21 @@
 package com.example.shop.core.product.repository;
 
-import com.example.shop.public_.tables.records.ProductRecord;
+import com.example.shop.public_interface.ProductCommonDto;
+import com.example.shop.public_.tables.records.GetProductsPagedRecord;
 import org.jooq.RecordMapper;
 
 import java.util.Collections;
 
-public class ProductCommonMapper implements RecordMapper<ProductRecord, ProductCommonEntity> {
+public class ProductCommonMapper implements RecordMapper<GetProductsPagedRecord, ProductCommonDto> {
     @Override
-    public ProductCommonEntity map(ProductRecord productRecord) {
-        return new ProductCommonEntity(
+    public ProductCommonDto map(GetProductsPagedRecord productRecord) {
+        return new ProductCommonDto(
                 productRecord.getCode(),
                 Collections.emptyList(),
                 productRecord.getName(),
-                productRecord.getNormalizedName(),
                 productRecord.getPrice(),
                 productRecord.getRating(),
-                productRecord.getOrderQuantity(),
-                productRecord.getAdditionalInfo().data()
+                productRecord.getOrderQuantity()
         );
     }
 }

@@ -2,13 +2,11 @@ package com.example.shop.product;
 
 import com.example.shop.core.product.repository.ProductCommonEntity;
 import com.example.shop.core.product.repository.ProductRepository;
-import com.example.shop.core.product.repository.ProductRepositoryImpl;
 import com.example.shop.core.product.service.ProductService;
-import com.example.shop.publicInterface.FilterDto;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
-import org.jooq.impl.DefaultConfiguration;
-import org.junit.jupiter.api.BeforeAll;
+import com.example.shop.public_interface.FilterDto;
+import com.example.shop.public_interface.ProductCommonDto;
+import com.example.shop.public_interface.SortType;
+import com.example.shop.public_interface.mapper.CommonProductMapEntityToDto;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -23,14 +21,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @Testcontainers
@@ -56,7 +57,67 @@ public class ProductServiceIntegrationTest {
     @Test
     @Order(1)
     public void setup() {
-        var listProducts = List.of(
+        var listProducts = getProductList();
+
+        for (ProductCommonEntity listProduct : listProducts) {
+            productRepository.addProduct(listProduct);
+        }
+    }
+
+    @Test
+    public void getProducts() {
+        var filterDto = FilterDto.getDefault();
+        var products = productService.getProducts(filterDto);
+
+        assertFalse(products.products().isEmpty());
+    }
+
+    @Test
+    public void getProductsSortedByPriceAsc() {
+        var productList = mapListEntityToDto(getProductList());
+        var filterDto = getFilterDtoWithSortType(SortType.PRICE_ASC);
+
+        var receivedProductList = productService.getProducts(filterDto);
+        var comparator = Comparator.comparing(ProductCommonDto::price);
+
+        assertArrayEquals(
+                getSortedProducts(productList, comparator).toArray(),
+                receivedProductList.products().toArray()
+        );
+    }
+
+    @Test
+    public void getProductsSortedByPriceDesc() {
+        var productList = mapListEntityToDto(getProductList());
+        var filterDto = getFilterDtoWithSortType(SortType.PRICE_DESC);
+
+        var receivedProductList = productService.getProducts(filterDto);
+        var comparator = Comparator.comparing(ProductCommonDto::price)
+                .reversed();
+
+        assertArrayEquals(
+                getSortedProducts(productList, comparator).toArray(),
+                receivedProductList.products().toArray()
+        );
+    }
+
+    @Test
+    public void getProductsSortedByOrderDesc() {
+        var productList = mapListEntityToDto(getProductList());
+        var filterDto = getFilterDtoWithSortType(SortType.TOTAL_ORDER_DESC);
+
+        var receivedProductList = productService.getProducts(filterDto);
+        var comparator = Comparator.comparing(ProductCommonDto::orderQuantity)
+                .reversed();
+
+        assertArrayEquals(
+                getSortedProducts(productList, comparator).toArray(),
+                receivedProductList.products().toArray()
+        );
+    }
+
+    private List<ProductCommonEntity> getProductList() {
+        return List.of(
                 new ProductCommonEntity(
                         "1",
                         Collections.emptyList(),
@@ -78,17 +139,25 @@ public class ProductServiceIntegrationTest {
                         "{}"
                 )
         );
-
-        for (ProductCommonEntity listProduct : listProducts) {
-            productRepository.addProduct(listProduct);
-        }
     }
 
-    @Test
-    public void getProducts() {
-        var filterDto = FilterDto.getDefault();
-        var products = productService.getProducts(filterDto);
+    private List<ProductCommonDto> getSortedProducts(List<ProductCommonDto> products, Comparator<ProductCommonDto> comparator) {
+        var sortedProducts = new ArrayList<>(products);
+        sortedProducts.sort(comparator);
+        return sortedProducts;
+    }
 
-        assertFalse(products.isEmpty());
+    private List<ProductCommonDto> mapListEntityToDto(List<ProductCommonEntity> entityList) {
+        return entityList.stream()
+                .map(CommonProductMapEntityToDto::map)
+                .collect(Collectors.toList());
+    }
+
+    private FilterDto getFilterDtoWithSortType(SortType type) {
+        return new FilterDto(
+                "",
+                type,
+                new FilterDto.PaginationProperty(getProductList().size(), 1)
+        );
     }
 }

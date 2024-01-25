@@ -5,6 +5,7 @@ testcontainer = "1.19.1"
 [plugins]
 liquibase-plugin = { id = "org.liquibase.gradle", version = "2.2.0" }
 jooq-plugin = { id = "nu.studer.jooq", version = "8.2" }
+protobuf-plugin = { id = "com.google.protobuf", version = "0.9.4" }
 
 [libraries]
 #Spring lib
@@ -27,3 +28,11 @@ liquibase-core = { module = "org.liquibase:liquibase-core", version = "" }
 
 #Tomcat lib
 tomcat-annotations-api = { module = "org.apache.tomcat:annotations-api", version = "6.0.53" }
+
+#gRPC lib
+spring-grpc = { module = "io.github.lognet:grpc-spring-boot-starter", version = "5.1.0" }
+grpc = { module = "io.grpc:grpc-netty-shaded", version = "1.58.0" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version = "1.58.0" }
+grpc-stub = { module = "io.grpc:grpc-stub", version = "1.58.0" }
+grpc-server = { module = "net.devh:grpc-server-spring-boot-starter", version = "2.15.0.RELEASE" }
+protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version = "3.23.0" }

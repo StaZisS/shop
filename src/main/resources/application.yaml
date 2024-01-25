@@ -14,4 +14,3 @@ spring:
 
   jooq:
     sql-dialect: postgres
-

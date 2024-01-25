@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package product;
+
+option java_multiple_files = true;
+
+message GetProductPageRequest {
+  string product_name = 1;
+  string sort_type = 2;
+  int32 page_size = 3;
+  int32 page_number = 4;
+}
+
+message GetProductPageResponse {
+  repeated CommonProduct products = 1;
+  PaginationInfo pagination = 2;
+}
+
+message CommonProduct {
+  string code = 1;
+  repeated string images_url = 2;
+  string name = 3;
+  string price = 4;
+  double rating = 5;
+  int32 order_quantity = 6;
+}
+
+message PaginationInfo {
+  int32 page_size = 1;
+  int32 page_count = 2;
+  int32 current_page = 3;
+}
+
+service GetProductPageService {
+  rpc GetProductPage(GetProductPageRequest) returns (GetProductPageResponse);
+}

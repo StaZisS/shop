@@ -1,11 +1,10 @@
 package com.example.shop.core.product.repository;
 
-import com.example.shop.publicInterface.FilterDto;
-import com.example.shop.publicInterface.ProductCommonDto;
-
-import java.util.List;
+import com.example.shop.public_interface.FilterDto;
+import com.example.shop.public_interface.ProductPageDto;
 
 public interface ProductRepository {
-    List<ProductCommonEntity> getCommonProducts(FilterDto filterDto);
+    ProductPageDto getCommonProductsPage(FilterDto filterDto);
     void addProduct(ProductCommonEntity entity);
+    int getCountProducts(String query);
 }
