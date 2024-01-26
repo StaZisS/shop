@@ -1,8 +1,6 @@
-package com.example.shop.public_interface;
+package com.example.shop.public_interface.product;
 
 import com.example.shop.core.product.repository.ProductCommonEntity;
-import com.example.shop.public_interface.exception.ExceptionInApplication;
-import com.example.shop.public_interface.exception.ExceptionType;
 
 import java.util.Comparator;
 

@@ -7,4 +7,8 @@ public class ExceptionInApplication extends RuntimeException {
         super(message);
         this.type = type;
     }
+
+    public ExceptionType getType() {
+        return type;
+    }
 }

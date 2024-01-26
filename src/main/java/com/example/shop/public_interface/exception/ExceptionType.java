@@ -1,5 +1,7 @@
 package com.example.shop.public_interface.exception;
 
 public enum ExceptionType {
-    INVALID
+    FATAL,
+    INVALID,
+    ALREADY_EXISTS
 }

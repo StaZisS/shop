@@ -10,7 +10,7 @@ import product.GetProductPageServiceGrpc;
 
 @GrpcService
 @RequiredArgsConstructor
-public class ProductController extends GetProductPageServiceGrpc.GetProductPageServiceImplBase {
+public class GrpcProductController extends GetProductPageServiceGrpc.GetProductPageServiceImplBase {
     private final ProductService productService;
 
     @Override

@@ -1,7 +1,7 @@
 package com.example.shop.rest.controller.mapper;
 
-import com.example.shop.public_interface.FilterDto;
-import com.example.shop.public_interface.SortType;
+import com.example.shop.public_interface.product.FilterDto;
+import com.example.shop.public_interface.product.SortType;
 import com.example.shop.rest.controller.GetProductPageRequest;
 
 public class RequestMapper {

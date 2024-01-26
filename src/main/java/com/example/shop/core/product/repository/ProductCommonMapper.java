@@ -1,6 +1,6 @@
 package com.example.shop.core.product.repository;
 
-import com.example.shop.public_interface.ProductCommonDto;
+import com.example.shop.public_interface.product.ProductCommonDto;
 import com.example.shop.public_.tables.records.GetProductsPagedRecord;
 import org.jooq.RecordMapper;
 

@@ -1,7 +1,7 @@
 package com.example.shop.core.product.repository;
 
-import com.example.shop.public_interface.FilterDto;
-import com.example.shop.public_interface.ProductPageDto;
+import com.example.shop.public_interface.product.FilterDto;
+import com.example.shop.public_interface.product.ProductPageDto;
 
 public interface ProductRepository {
     ProductPageDto getCommonProductsPage(FilterDto filterDto);

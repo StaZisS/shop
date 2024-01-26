@@ -1,7 +1,7 @@
-package com.example.shop.public_interface.mapper;
+package com.example.shop.public_interface.product.mapper;
 
 import com.example.shop.core.product.repository.ProductCommonEntity;
-import com.example.shop.public_interface.ProductCommonDto;
+import com.example.shop.public_interface.product.ProductCommonDto;
 
 public class CommonProductMapEntityToDto {
     public static ProductCommonDto map(ProductCommonEntity productCommonEntity) {

@@ -1,8 +1,8 @@
 package com.example.shop.grpc;
 
-import com.example.shop.public_interface.FilterDto;
-import com.example.shop.public_interface.ProductPageDto;
-import com.example.shop.public_interface.SortType;
+import com.example.shop.public_interface.product.FilterDto;
+import com.example.shop.public_interface.product.ProductPageDto;
+import com.example.shop.public_interface.product.SortType;
 import product.CommonProduct;
 import product.GetProductPageRequest;
 import product.GetProductPageResponse;

@@ -3,10 +3,10 @@ package com.example.shop.product;
 import com.example.shop.core.product.repository.ProductCommonEntity;
 import com.example.shop.core.product.repository.ProductRepository;
 import com.example.shop.core.product.service.ProductService;
-import com.example.shop.public_interface.FilterDto;
-import com.example.shop.public_interface.ProductCommonDto;
-import com.example.shop.public_interface.SortType;
-import com.example.shop.public_interface.mapper.CommonProductMapEntityToDto;
+import com.example.shop.public_interface.product.FilterDto;
+import com.example.shop.public_interface.product.ProductCommonDto;
+import com.example.shop.public_interface.product.SortType;
+import com.example.shop.public_interface.product.mapper.CommonProductMapEntityToDto;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @Testcontainers
-@SpringJUnitConfig(classes = {IntegrationTestConfiguration.class})
+@SpringJUnitConfig(classes = {ProductIntegrationTestConfiguration.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductServiceIntegrationTest {
     @Container

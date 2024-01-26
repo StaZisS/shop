@@ -1,4 +1,4 @@
-package com.example.shop.public_interface;
+package com.example.shop.public_interface.product;
 
 import java.util.List;
 

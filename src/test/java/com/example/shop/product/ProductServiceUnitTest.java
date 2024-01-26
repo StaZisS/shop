@@ -4,10 +4,10 @@ package com.example.shop.product;
 import com.example.shop.core.product.repository.ProductRepository;
 import com.example.shop.core.product.repository.ProductRepositoryImpl;
 import com.example.shop.core.product.service.ProductService;
-import com.example.shop.public_interface.FilterDto;
-import com.example.shop.public_interface.PaginationDto;
-import com.example.shop.public_interface.ProductCommonDto;
-import com.example.shop.public_interface.ProductPageDto;
+import com.example.shop.public_interface.product.FilterDto;
+import com.example.shop.public_interface.product.PaginationDto;
+import com.example.shop.public_interface.product.ProductCommonDto;
+import com.example.shop.public_interface.product.ProductPageDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

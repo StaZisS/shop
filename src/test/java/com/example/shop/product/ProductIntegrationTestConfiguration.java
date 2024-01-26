@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration;
 @ImportAutoConfiguration({
         ShopApplication.class
 })
-public class IntegrationTestConfiguration {
+public class ProductIntegrationTestConfiguration {
 }

@@ -1,9 +1,9 @@
 package com.example.shop.core.product.repository;
 
 import com.example.shop.core.util.QueryTool;
-import com.example.shop.public_interface.FilterDto;
-import com.example.shop.public_interface.PaginationDto;
-import com.example.shop.public_interface.ProductPageDto;
+import com.example.shop.public_interface.product.FilterDto;
+import com.example.shop.public_interface.product.PaginationDto;
+import com.example.shop.public_interface.product.ProductPageDto;
 import com.example.shop.public_.tables.Product;
 import lombok.RequiredArgsConstructor;
 import org.jooq.JSONB;
