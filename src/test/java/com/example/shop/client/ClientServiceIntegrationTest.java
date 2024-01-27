@@ -3,6 +3,8 @@ package com.example.shop.client;
 import com.example.shop.core.client.repository.ClientRepository;
 import com.example.shop.core.client.service.ClientService;
 import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.exception.ExceptionInApplication;
+import com.example.shop.public_interface.exception.ExceptionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +18,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Testcontainers
@@ -57,5 +63,24 @@ public class ClientServiceIntegrationTest {
         }
 
         assertEquals(createClientDto.email(), clientEntityOptional.get().email());
+    }
+
+    @Test
+    public void createClientWithDuplicatedEmail() {
+        var createClientDto = new CreateClientDto(
+                "Sasha",
+                "easy@gmail.com",
+                "veryStrongPassword",
+                OffsetDateTime.now(),
+                "UNSPECIFIED"
+        );
+
+        clientService.createClient(createClientDto);
+
+        var thrownException = assertThrows(ExceptionInApplication.class, () -> {
+            clientService.createClient(createClientDto);
+        });
+
+        assertEquals(ExceptionType.ALREADY_EXISTS ,thrownException.getType());
     }
 }
