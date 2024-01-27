@@ -74,6 +74,10 @@ public class JwtProvider {
         return getClaims(token, jwtRefreshSecret);
     }
 
+    public long getRefreshTokenTtl() {
+        return jwtRefreshTtlSecond;
+    }
+
     private Claims getClaims(@NonNull String token, @NonNull SecretKey secret) {
         return Jwts.parser()
                 .verifyWith(secret)

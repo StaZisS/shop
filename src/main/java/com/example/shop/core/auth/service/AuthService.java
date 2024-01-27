@@ -1,5 +1,6 @@
 package com.example.shop.core.auth.service;
 
+import com.example.shop.core.auth.entity.RefreshTokenEntity;
 import com.example.shop.core.auth.provider.DataForGenerateToken;
 import com.example.shop.core.auth.provider.JwtProvider;
 import com.example.shop.core.auth.repository.RefreshRepository;
@@ -16,7 +17,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-//TODO: порефакторить убрать повторы
+//TODO: порефакторить убрать повторы, после напискания тестов
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -34,7 +35,8 @@ public class AuthService {
             final String accessToken = jwtProvider.generateAccessToken(dataForGenerateToken);
             final String refreshToken = jwtProvider.generateRefreshToken(dataForGenerateToken);
 
-            repository.saveRefreshToken(client.clientId().toString(), refreshToken);
+            final RefreshTokenEntity refreshTokenEntity = getRefreshTokenEntity(refreshToken, client.clientId().toString());
+            repository.saveRefreshToken(refreshTokenEntity);
 
             return new JwtResponseDto(accessToken, refreshToken);
         }
@@ -57,9 +59,9 @@ public class AuthService {
         final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
         final String clientId = claims.getSubject();
 
-        final String oldRefreshToken = repository.getRefreshTokenByClientId(clientId)
+        final RefreshTokenEntity oldRefreshToken = repository.getRefreshTokenByClientId(clientId)
                 .orElseThrow(() -> new ExceptionInApplication("RefreshToken истек", ExceptionType.UNAUTHORIZED));
-        if (!oldRefreshToken.equals(refreshToken)) {
+        if (!oldRefreshToken.getRefreshToken().equals(refreshToken)) {
             throw new ExceptionInApplication("Недействительный RefreshToken", ExceptionType.UNAUTHORIZED);
         }
 
@@ -77,13 +79,13 @@ public class AuthService {
         final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
         final String clientId = claims.getSubject();
 
-        final String oldRefreshToken = repository.getRefreshTokenByClientId(clientId)
+        final RefreshTokenEntity oldRefreshToken = repository.getRefreshTokenByClientId(clientId)
                 .orElseThrow(() -> new ExceptionInApplication("RefreshToken истек", ExceptionType.UNAUTHORIZED));
-        if (!oldRefreshToken.equals(refreshToken)) {
+        if (!oldRefreshToken.getRefreshToken().equals(refreshToken)) {
             throw new ExceptionInApplication("Недействительный RefreshToken", ExceptionType.UNAUTHORIZED);
         }
 
-        repository.deleteRefreshToken(oldRefreshToken);
+        repository.deleteRefreshToken(oldRefreshToken.getClientId());
 
         final ClientEntity client = clientService.getByClientId(clientId)
                 .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
@@ -92,13 +94,22 @@ public class AuthService {
         final String accessToken = jwtProvider.generateAccessToken(dataForGenerateToken);
         final String newRefreshToken = jwtProvider.generateRefreshToken(dataForGenerateToken);
 
-        repository.saveRefreshToken(clientId, newRefreshToken);
+        final RefreshTokenEntity refreshTokenEntity = getRefreshTokenEntity(newRefreshToken, clientId);
+        repository.saveRefreshToken(refreshTokenEntity);
 
         return new JwtResponseDto(accessToken, newRefreshToken);
     }
 
     private DataForGenerateToken forGenerateToken(ClientEntity entity) {
         return new DataForGenerateToken(entity.clientId().toString());
+    }
+
+    private RefreshTokenEntity getRefreshTokenEntity(String refreshToken, String clientId) {
+        return new RefreshTokenEntity(
+                clientId,
+                refreshToken,
+                jwtProvider.getRefreshTokenTtl()
+        );
     }
 
 }

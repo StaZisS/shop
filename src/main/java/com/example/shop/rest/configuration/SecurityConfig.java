@@ -17,6 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+    private final String[] whiteList = new String[] {
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/token"
+    };
+
     private final JwtFilter jwtFilter;
 
     @Bean
@@ -25,7 +31,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token").permitAll()
+                                .requestMatchers(whiteList).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
