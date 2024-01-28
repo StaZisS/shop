@@ -37,7 +37,8 @@ public class JwtFilter extends GenericFilterBean {
         jwtInfoToken.setAuthenticated(true);
         SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
 
-    }
+        fc.doFilter(request, response);
+     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
         final String bearer = request.getHeader(AUTHORIZATION);

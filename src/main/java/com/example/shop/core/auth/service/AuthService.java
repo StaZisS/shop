@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 //TODO: порефакторить убрать повторы, после напискания тестов
+//logout
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -27,7 +28,7 @@ public class AuthService {
 
     public JwtResponseDto login(@NonNull LoginDto dto) {
         final ClientEntity client = clientService.getByEmail(dto.email())
-                .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
+                .orElseThrow(() -> new ExceptionInApplication("Неверная почта или пароль", ExceptionType.NOT_FOUND));
 
         var dataForGenerateToken = forGenerateToken(client);
 
@@ -41,13 +42,11 @@ public class AuthService {
             return new JwtResponseDto(accessToken, refreshToken);
         }
 
-        throw new ExceptionInApplication("Неверная почта или пароль", ExceptionType.UNAUTHORIZED);
+        throw new ExceptionInApplication("Неверная почта или пароль", ExceptionType.NOT_FOUND);
     }
 
     public JwtResponseDto register(@NonNull CreateClientDto dto) {
-        clientService.createClient(dto)
-                .orElseThrow(() -> new ExceptionInApplication("Клиент уже существует", ExceptionType.ALREADY_EXISTS));
-
+        clientService.createClient(dto);
         var loginDto = new LoginDto(dto.email(), dto.password());
 
         return login(loginDto);

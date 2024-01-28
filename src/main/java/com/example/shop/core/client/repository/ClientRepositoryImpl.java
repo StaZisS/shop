@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class ClientRepositoryImpl implements ClientRepository {
         return create.selectFrom(Client.CLIENT)
                 .where(Client.CLIENT.EMAIL.eq(email))
                 .fetchOptional()
-                .map(clientEntityMapper::map);
+                .map(clientEntityMapper);
     }
 
     @Override
@@ -42,6 +43,6 @@ public class ClientRepositoryImpl implements ClientRepository {
         return create.selectFrom(Client.CLIENT)
                 .where(Client.CLIENT.CLIENT_ID.eq(clientId))
                 .fetchOptional()
-                .map(clientEntityMapper::map);
+                .map(clientEntityMapper);
     }
 }

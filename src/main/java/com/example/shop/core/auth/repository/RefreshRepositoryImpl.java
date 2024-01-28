@@ -11,17 +11,13 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 @Repository
-@RequiredArgsConstructor
 public class RefreshRepositoryImpl implements RefreshRepository {
     private static final String KEY = "RefreshToken";
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final HashOperations<String, String, RefreshTokenEntity> hashOperations;
 
-    private HashOperations<String, String, RefreshTokenEntity> hashOperations;
-
-    @PostConstruct
-    private void init(){
-        hashOperations = redisTemplate.opsForHash();
+    public RefreshRepositoryImpl(RedisTemplate redisTemplate) {
+        this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
