@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset gordey_dovydenko:4
+-- changeset gordey_dovydenko:1
 CREATE
     EXTENSION IF NOT EXISTS "uuid-ossp";
 

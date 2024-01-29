@@ -1,7 +1,17 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changeset/init_table_product.sql
+        file: db/changelog/changeset/init_table_store.sql
   - include:
-      file: db/changelog/changeset/init_table_client.sql
+        file: db/changelog/changeset/init_table_product.sql
   - include:
-      file: db/changelog/changeset/init_table_review.sql
+        file: db/changelog/changeset/init_table_client.sql
+  - include:
+        file: db/changelog/changeset/init_table_review.sql
+  - include:
+        file: db/changelog/changeset/init_table_store_employees.sql
+  - include:
+        file: db/changelog/changeset/init_table_order.sql
+  - include:
+        file: db/changelog/changeset/init_table_favorites.sql
+  - include:
+        file: db/changelog/changeset/init_table_cart.sql
