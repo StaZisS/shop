@@ -4,7 +4,7 @@ import com.example.shop.public_interface.client.CreateClientDto;
 import com.example.shop.public_interface.product.FilterDto;
 import com.example.shop.public_interface.product.SortType;
 import com.example.shop.rest.controller.GetProductPageRequest;
-import com.example.shop.rest.controller.RegisterDto;
+import com.example.shop.rest.controller.auth.RegisterDto;
 
 public class RequestMapper {
     public static FilterDto mapRequestToDto(GetProductPageRequest request) {

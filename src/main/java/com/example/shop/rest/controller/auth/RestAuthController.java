@@ -1,4 +1,4 @@
-package com.example.shop.rest.controller;
+package com.example.shop.rest.controller.auth;
 
 import com.example.shop.core.auth.service.AuthService;
 import com.example.shop.public_interface.auth.JwtResponseDto;
@@ -28,13 +28,18 @@ public class RestAuthController {
         return authService.register(createClientDto);
     }
 
-    @PostMapping("token")
+    @PostMapping("/token")
     public JwtResponseDto getAccessToken(@RequestBody RefreshJwtRequest dto) {
         return authService.getAccessToken(dto.refreshToken());
     }
 
-    @PostMapping("refresh")
+    @PostMapping("/refresh")
     public JwtResponseDto refresh(@RequestBody RefreshJwtRequest dto) {
         return authService.refresh(dto.refreshToken());
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody RefreshJwtRequest dto) {
+        authService.logout(dto.refreshToken());
     }
 }

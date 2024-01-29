@@ -6,6 +6,7 @@ import com.example.shop.core.auth.provider.JwtProvider;
 import com.example.shop.core.auth.repository.RefreshRepository;
 import com.example.shop.core.auth.repository.RefreshRepositoryImpl;
 import com.example.shop.core.auth.service.AuthService;
+import com.example.shop.core.auth.service.TokenService;
 import com.example.shop.core.client.repository.ClientEntity;
 import com.example.shop.core.client.service.ClientService;
 import com.example.shop.core.util.PasswordTool;
@@ -42,8 +43,9 @@ public class AuthServiceUnitTest {
         clientService = mock(ClientService.class);
         refreshRepository = mock(RefreshRepositoryImpl.class);
         jwtProvider = new JwtProvider(KEY_ACCESS, KEY_REFRESH, TTL_ACCESS, TTL_REFRESH);
+        var tokenService = new TokenService(refreshRepository, jwtProvider);
 
-        authService = new AuthService(jwtProvider, clientService, refreshRepository);
+        authService = new AuthService(clientService, tokenService);
     }
 
     @Test
@@ -162,12 +164,12 @@ public class AuthServiceUnitTest {
         var dataForGenerateToken = new DataForGenerateToken(clientId);
         var refreshToken = jwtProvider.generateRefreshToken(dataForGenerateToken);
         var refreshTokenEntity = new RefreshTokenEntity(
-                clientId,
+                jwtProvider.getRefreshClaims(refreshToken).getId(),
                 refreshToken,
                 jwtProvider.getRefreshTokenTtl()
         );
 
-        when(refreshRepository.getRefreshTokenByClientId(clientId))
+        when(refreshRepository.getRefreshTokenById(refreshTokenEntity.getTokenId()))
                 .thenReturn(Optional.of(refreshTokenEntity));
         when(clientService.getByClientId(clientId))
                 .thenReturn(Optional.of(clientEntity));
@@ -193,12 +195,12 @@ public class AuthServiceUnitTest {
         var dataForGenerateToken = new DataForGenerateToken(clientId);
         var refreshToken = jwtProvider.generateRefreshToken(dataForGenerateToken);
         var refreshTokenEntity = new RefreshTokenEntity(
-                clientId,
+                jwtProvider.getRefreshClaims(refreshToken).getId(),
                 refreshToken,
                 jwtProvider.getRefreshTokenTtl()
         );
 
-        when(refreshRepository.getRefreshTokenByClientId(clientId))
+        when(refreshRepository.getRefreshTokenById(refreshTokenEntity.getTokenId()))
                 .thenReturn(Optional.of(refreshTokenEntity));
         when(clientService.getByClientId(clientId))
                 .thenReturn(Optional.of(clientEntity));

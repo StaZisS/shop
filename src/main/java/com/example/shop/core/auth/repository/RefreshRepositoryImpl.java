@@ -2,13 +2,11 @@ package com.example.shop.core.auth.repository;
 
 import com.example.shop.core.auth.entity.RefreshTokenEntity;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 
 @Repository
 public class RefreshRepositoryImpl implements RefreshRepository {
@@ -16,22 +14,22 @@ public class RefreshRepositoryImpl implements RefreshRepository {
 
     private final HashOperations<String, String, RefreshTokenEntity> hashOperations;
 
-    public RefreshRepositoryImpl(RedisTemplate redisTemplate) {
+    public RefreshRepositoryImpl(RedisTemplate<String, Object> redisTemplate) {
         this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
     public void saveRefreshToken(@NonNull RefreshTokenEntity entity) {
-        hashOperations.put(KEY, entity.getClientId(), entity);
+        hashOperations.put(KEY, entity.getTokenId(), entity);
     }
 
     @Override
-    public Optional<RefreshTokenEntity> getRefreshTokenByClientId(@NonNull String clientId) {
-        return Optional.ofNullable(hashOperations.get(KEY, clientId));
+    public Optional<RefreshTokenEntity> getRefreshTokenById(@NonNull String tokenId) {
+        return Optional.ofNullable(hashOperations.get(KEY, tokenId));
     }
 
     @Override
-    public void deleteRefreshToken(@NonNull String clientId) {
-        hashOperations.delete(KEY, clientId);
+    public void deleteRefreshToken(@NonNull String tokenId) {
+        hashOperations.delete(KEY, tokenId);
     }
 }

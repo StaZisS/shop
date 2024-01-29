@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface RefreshRepository {
     void saveRefreshToken(RefreshTokenEntity entity);
-    Optional<RefreshTokenEntity> getRefreshTokenByClientId(String clientId);
-    void deleteRefreshToken(String clientId);
+    Optional<RefreshTokenEntity> getRefreshTokenById(String tokenId);
+    void deleteRefreshToken(String tokenId);
 }

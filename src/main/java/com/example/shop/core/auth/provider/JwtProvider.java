@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtProvider {
@@ -40,18 +41,22 @@ public class JwtProvider {
 
     public String generateAccessToken(@NonNull DataForGenerateToken data) {
         final Date accessExpiration = getDateWithPlus(jwtAccessTtlSecond);
+        final String accessTokenId = UUID.randomUUID().toString();
         return Jwts.builder()
                 .subject(data.clientId())
                 .expiration(accessExpiration)
+                .id(accessTokenId)
                 .signWith(jwtAccessSecret)
                 .compact();
     }
 
     public String generateRefreshToken(@NonNull DataForGenerateToken data) {
         final Date refreshExpiration = getDateWithPlus(jwtRefreshTtlSecond);
+        final String refreshTokenId = UUID.randomUUID().toString();
         return Jwts.builder()
                 .subject(data.clientId())
                 .expiration(refreshExpiration)
+                .id(refreshTokenId)
                 .signWith(jwtRefreshSecret)
                 .compact();
     }
