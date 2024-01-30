@@ -33,7 +33,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test' exclude(group: "com.vaadin.external.google", module:"android-json")
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.2' exclude(group: "com.vaadin.external.google", module:"android-json")
 	testImplementation libs.testcontainers.core
 	testImplementation libs.testcontainers.junit.jupiter
 	testImplementation libs.testcontainers.postgresql
@@ -55,19 +55,19 @@ dependencies {
 
 	compileOnly libs.tomcat.annotations.api
 
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
-	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.1'
+	runtimeOnly libs.jjwt.impl
+	runtimeOnly libs.jjwt.jackson
+	implementation libs.jjwt.api
+	implementation libs.jakarta.bind.api
 
-	implementation 'org.springframework.security:spring-security-core:6.2.1'
-	implementation 'org.springframework.security:spring-security-web:6.2.1'
-	implementation 'org.springframework.security:spring-security-config:6.2.1'
+	implementation libs.spring.security.core
+	implementation  libs.spring.security.web
+	implementation  libs.spring.security.config
 
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.2'
+	implementation libs.spring.data.redis
 	implementation 'redis.clients:jedis'
 
-	implementation 'com.redis.testcontainers:testcontainers-redis:1.6.4'
+	implementation libs.testcontainers.redis
 
 }
 

@@ -6,8 +6,8 @@ CREATE
 
 CREATE TABLE Store
 (
-    store_id UUID PRIMARY KEY,
-    name     VARCHAR(60) NOT NULL
+    store_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name     VARCHAR(60) NOT NULL UNIQUE
 );
 -- rollback DROP TABLE Store;
 

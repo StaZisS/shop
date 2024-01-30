@@ -4,7 +4,7 @@ import com.example.shop.core.client.repository.ClientEntity;
 import com.example.shop.core.client.repository.ClientRepository;
 import com.example.shop.core.client.validation.ClientValidationService;
 import com.example.shop.core.util.PasswordTool;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientValidationService clientValidationService;
 
-    public Optional<ClientEntity> createClient(CreateClientDto dto) {
+    public Optional<ClientEntity> createClient(ClientCreateDto dto) {
         clientValidationService.validateCreateClient(dto);
 
         var entity = toFormEntityFromDto(dto);
@@ -41,7 +41,7 @@ public class ClientService {
         }
     }
 
-    private ClientEntity toFormEntityFromDto(CreateClientDto dto) {
+    private ClientEntity toFormEntityFromDto(ClientCreateDto dto) {
         return new ClientEntity(
                 UUID.randomUUID(),
                 dto.name(),

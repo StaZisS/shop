@@ -5,7 +5,7 @@ import com.example.shop.core.client.repository.ClientRepository;
 import com.example.shop.core.client.repository.ClientRepositoryImpl;
 import com.example.shop.core.client.service.ClientService;
 import com.example.shop.core.client.validation.ClientValidationService;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ public class ClientServiceUnitTest {
 
     @Test
     public void createClient() {
-        var createClientDto = new CreateClientDto(
+        var createClientDto = new ClientCreateDto(
                 "Sasha",
                 "ggwp@gmail.com",
                 "veryStrongPassword",
@@ -48,7 +48,7 @@ public class ClientServiceUnitTest {
 
     @Test
     public void createClientWithInvalidEmail() {
-        var createClientDto = new CreateClientDto(
+        var createClientDto = new ClientCreateDto(
                 "Sasha",
                 "@gmail.com",
                 "veryStrongPassword",
@@ -68,7 +68,7 @@ public class ClientServiceUnitTest {
 
     @Test
     public void createClientWithInvalidGender() {
-        var createClientDto = new CreateClientDto(
+        var createClientDto = new ClientCreateDto(
                 "Sasha",
                 "ggwp@gmail.com",
                 "veryStrongPassword",
@@ -86,7 +86,7 @@ public class ClientServiceUnitTest {
         assertEquals(ExceptionType.INVALID ,thrownException.getType());
     }
 
-    private ClientEntity mapCreateClientDtoToEntity(CreateClientDto dto) {
+    private ClientEntity mapCreateClientDtoToEntity(ClientCreateDto dto) {
         return new ClientEntity(
                 UUID.randomUUID(),
                 dto.name(),

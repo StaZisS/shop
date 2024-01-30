@@ -1,6 +1,6 @@
 package com.example.shop.rest.controller.mapper;
 
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.product.FilterDto;
 import com.example.shop.public_interface.product.SortType;
 import com.example.shop.rest.controller.GetProductPageRequest;
@@ -19,8 +19,8 @@ public class RequestMapper {
         );
     }
 
-    public static CreateClientDto mapRequestToDto(RegisterDto dto) {
-        return new CreateClientDto(
+    public static ClientCreateDto mapRequestToDto(RegisterDto dto) {
+        return new ClientCreateDto(
                 dto.name(),
                 dto.email(),
                 dto.password(),

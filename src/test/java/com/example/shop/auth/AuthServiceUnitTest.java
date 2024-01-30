@@ -11,7 +11,7 @@ import com.example.shop.core.client.repository.ClientEntity;
 import com.example.shop.core.client.service.ClientService;
 import com.example.shop.core.util.PasswordTool;
 import com.example.shop.public_interface.auth.LoginDto;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,7 +106,7 @@ public class AuthServiceUnitTest {
     @Test
     public void register() {
         var password = "12345678";
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp@mail.ru",
                 password,
@@ -135,7 +135,7 @@ public class AuthServiceUnitTest {
 
     @Test
     public void registerClientWithExistEmail() {
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp@mail.ru",
                 "12345678",

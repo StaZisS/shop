@@ -1,7 +1,7 @@
 package com.example.shop.core.client.validation;
 
 import com.example.shop.core.client.repository.ClientRepository;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class ClientValidationService {
 
     private final ClientRepository clientRepository;
 
-    public void validateCreateClient(CreateClientDto dto) {
+    public void validateCreateClient(ClientCreateDto dto) {
         checkGender(dto.gender());
         checkEmail(dto.email());
     }

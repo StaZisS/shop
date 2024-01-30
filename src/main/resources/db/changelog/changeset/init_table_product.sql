@@ -85,28 +85,3 @@ AS
     END;
 ' LANGUAGE plpgsql;
 
--- changeset gordey_dovydenko:3
-
-INSERT INTO Product (code, name, normalized_name, price, rating, order_quantity, additional_info)
-VALUES ('P001', 'Product 1', 'product_1', 29.99, 4.5, 20, '{
-  "color": "blue",
-  "size": "medium"
-}'),
-       ('P002', 'Product 2', 'product_2', 39.99, 3.8, 15, '{
-         "color": "red",
-         "size": "large"
-       }'),
-       ('P003', 'Product 3', 'product_3', 49.99, 4.2, 25, '{
-         "color": "green",
-         "size": "small"
-       }'),
-       ('P004', 'Product 4', 'product_4', 19.99, 4.0, 30, '{
-         "color": "black",
-         "size": "extra-large"
-       }'),
-       ('P005', 'Product 5', 'product_5', 59.99, 4.8, 10, '{
-         "color": "white",
-         "size": "small"
-       }');
-
-

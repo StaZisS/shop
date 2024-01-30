@@ -3,7 +3,7 @@ package com.example.shop.rest.controller.auth;
 import com.example.shop.core.auth.service.AuthService;
 import com.example.shop.public_interface.auth.JwtResponseDto;
 import com.example.shop.public_interface.auth.LoginDto;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.rest.controller.mapper.RequestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +24,8 @@ public class RestAuthController {
 
     @PostMapping("/register")
     public JwtResponseDto register(@RequestBody RegisterDto dto) {
-        final CreateClientDto createClientDto = RequestMapper.mapRequestToDto(dto);
-        return authService.register(createClientDto);
+        final ClientCreateDto clientCreateDto = RequestMapper.mapRequestToDto(dto);
+        return authService.register(clientCreateDto);
     }
 
     @PostMapping("/token")

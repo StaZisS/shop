@@ -9,7 +9,7 @@ import com.example.shop.core.client.service.ClientService;
 import com.example.shop.core.util.PasswordTool;
 import com.example.shop.public_interface.auth.JwtResponseDto;
 import com.example.shop.public_interface.auth.LoginDto;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +66,7 @@ public class AuthServiceIntegrationTest {
     @Test
     public void registerAndLogin() {
         var password = "12345678";
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp@mail.ru",
                 password,
@@ -83,7 +83,7 @@ public class AuthServiceIntegrationTest {
     @Test
     public void getAccessToken() {
         var password = "12345678";
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp1@mail.ru",
                 password,
@@ -118,7 +118,7 @@ public class AuthServiceIntegrationTest {
     @Test
     public void refresh() {
         var password = "12345678";
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp2@mail.ru",
                 password,
@@ -153,7 +153,7 @@ public class AuthServiceIntegrationTest {
     @Test
     public void logout() {
         var password = "12345678";
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp3@mail.ru",
                 password,
@@ -187,7 +187,7 @@ public class AuthServiceIntegrationTest {
     @Test
     public void logoutAlreadyLogout() {
         var password = "12345678";
-        var registerDto = new CreateClientDto(
+        var registerDto = new ClientCreateDto(
                 "Gordey",
                 "ggwp4@mail.ru",
                 password,
@@ -202,7 +202,7 @@ public class AuthServiceIntegrationTest {
         assertThrows(ExceptionInApplication.class, () -> authService.logout(jwtTokens.refreshToken()));
     }
 
-    private JwtResponseDto registerClient(CreateClientDto dto) {
+    private JwtResponseDto registerClient(ClientCreateDto dto) {
         var clientEntity = new ClientEntity(
                 UUID.randomUUID(),
                 dto.name(),

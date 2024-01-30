@@ -1,18 +1,14 @@
 package com.example.shop.core.auth.service;
 
-import com.example.shop.core.auth.entity.RefreshTokenEntity;
 import com.example.shop.core.auth.provider.DataForGenerateToken;
-import com.example.shop.core.auth.provider.JwtProvider;
-import com.example.shop.core.auth.repository.RefreshRepository;
 import com.example.shop.core.client.repository.ClientEntity;
 import com.example.shop.core.client.service.ClientService;
 import com.example.shop.core.util.PasswordTool;
 import com.example.shop.public_interface.auth.JwtResponseDto;
 import com.example.shop.public_interface.auth.LoginDto;
-import com.example.shop.public_interface.client.CreateClientDto;
+import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
-import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +31,7 @@ public class AuthService {
         throw new ExceptionInApplication("Неверная почта или пароль", ExceptionType.NOT_FOUND);
     }
 
-    public JwtResponseDto register(@NonNull CreateClientDto dto) {
+    public JwtResponseDto register(@NonNull ClientCreateDto dto) {
         clientService.createClient(dto);
         var loginDto = new LoginDto(dto.email(), dto.password());
 
