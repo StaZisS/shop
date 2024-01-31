@@ -51,6 +51,7 @@ import static com.example.shop.public_.tables.Product.PRODUCT;
 @ActiveProfiles("test")
 public class ProductServiceIntegrationTest {
     private static final String CHANGELOG_FILE_PATH = "db/changelog/db.changelog-master.yaml";
+    private static final UUID STORE_ID = UUID.randomUUID();
 
     @Container
     private static PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:latest")
@@ -62,8 +63,6 @@ public class ProductServiceIntegrationTest {
 
     @Autowired private ProductService productService;
     @Autowired private ProductRepository productRepository;
-
-    private static final UUID STORE_ID = UUID.randomUUID();
 
     @DynamicPropertySource
     static void databaseProperties(DynamicPropertyRegistry registry) {
