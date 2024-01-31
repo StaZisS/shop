@@ -1,27 +1,33 @@
 package com.example.shop.core.product.repository;
 
 import com.example.shop.core.util.QueryTool;
+import com.example.shop.public_interface.exception.ExceptionInApplication;
+import com.example.shop.public_interface.exception.ExceptionType;
 import com.example.shop.public_interface.product.FilterDto;
 import com.example.shop.public_interface.product.PaginationDto;
 import com.example.shop.public_interface.product.ProductPageDto;
-import com.example.shop.public_.tables.Product;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jooq.JSONB;
+import org.jooq.Name;
 import org.springframework.stereotype.Repository;
 import org.jooq.DSLContext;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.shop.public_.Routines.getProductsPaged;
 import static org.jooq.impl.DSL.count;
+import static com.example.shop.public_.tables.Product.PRODUCT;
 
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
     private final DSLContext create;
 
-    private final ProductCommonMapper productCommonMapper = new ProductCommonMapper();
+    private final ProductCommonMapperToDto productCommonMapperToDto = new ProductCommonMapperToDto();
+    private final ProductCommonMapperToEntity productCommonMapperToEntity = new ProductCommonMapperToEntity();
 
     @Override
     public ProductPageDto getCommonProductsPage(FilterDto filterDto) {
@@ -54,7 +60,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         );
 
         var products = productsWithSize.stream()
-                .map(productCommonMapper::map)
+                .map(productCommonMapperToDto)
                 .collect(Collectors.toList());
 
         return new ProductPageDto(
@@ -64,29 +70,31 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void addProduct(ProductCommonEntity entity) {
-        create.insertInto(Product.PRODUCT)
-                .set(Product.PRODUCT.CODE, entity.code())
-                .set(Product.PRODUCT.NAME, entity.name())
-                .set(Product.PRODUCT.NORMALIZED_NAME, entity.normalizeName())
-                .set(Product.PRODUCT.PRICE, entity.price())
-                .set(Product.PRODUCT.RATING, entity.rating())
-                .set(Product.PRODUCT.ORDER_QUANTITY, entity.orderQuantity())
-                .set(Product.PRODUCT.ADDITIONAL_INFO, JSONB.valueOf(entity.additionalInfo()))
-                .execute();
+    public Optional<ProductCommonEntity> addProduct(ProductCommonEntity entity) {
+        return create.insertInto(PRODUCT)
+                .set(PRODUCT.CODE, entity.code())
+                .set(PRODUCT.STORE_ID, entity.storeId())
+                .set(PRODUCT.NAME, entity.name())
+                .set(PRODUCT.NORMALIZED_NAME, entity.normalizeName())
+                .set(PRODUCT.PRICE, entity.price())
+                .set(PRODUCT.RATING, entity.rating())
+                .set(PRODUCT.ORDER_QUANTITY, entity.orderQuantity())
+                .set(PRODUCT.ADDITIONAL_INFO, JSONB.valueOf(entity.additionalInfo()))
+                .returningResult(PRODUCT)
+                .fetchOptional(productCommonMapperToEntity);
     }
 
     @Override
-    public int getCountProducts(String query) {
+    public int getCountProducts(@NonNull String query) {
         var normalizedName = QueryTool.getNormalizedString(query);
         if (normalizedName.isEmpty()) {
             return create.select(count())
-                    .from(Product.PRODUCT)
+                    .from(PRODUCT)
                     .execute();
         }
         return create.select(count())
-                .from(Product.PRODUCT)
-                .where(Product.PRODUCT.NORMALIZED_NAME.contains(normalizedName))
+                .from(PRODUCT)
+                .where(PRODUCT.NORMALIZED_NAME.contains(normalizedName))
                 .execute();
     }
 }

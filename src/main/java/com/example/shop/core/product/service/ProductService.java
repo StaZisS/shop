@@ -26,7 +26,7 @@ public class ProductService {
             throw new ExceptionInApplication("Выход за пределы доступных страниц", ExceptionType.INVALID);
         }
 
-        if ( pagination.pageSize() <= 0) {
+        if (pagination.pageSize() <= 0) {
             throw new ExceptionInApplication("Количество элементов должно быть больше нуля", ExceptionType.INVALID);
         }
 

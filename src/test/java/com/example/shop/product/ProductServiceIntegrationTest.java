@@ -7,12 +7,21 @@ import com.example.shop.public_interface.product.FilterDto;
 import com.example.shop.public_interface.product.ProductCommonDto;
 import com.example.shop.public_interface.product.SortType;
 import com.example.shop.public_interface.product.mapper.CommonProductMapEntityToDto;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import org.jooq.DSLContext;
+import org.jooq.JSONB;
+import org.jooq.impl.DSL;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -21,31 +30,40 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static com.example.shop.public_.tables.Client.CLIENT;
+import static com.example.shop.public_.tables.Store.STORE;
+import static com.example.shop.public_.tables.Product.PRODUCT;
 
 @SpringBootTest
 @Testcontainers
 @SpringJUnitConfig(classes = {ProductIntegrationTestConfiguration.class})
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("test")
 public class ProductServiceIntegrationTest {
+    private static final String CHANGELOG_FILE_PATH = "db/changelog/db.changelog-master.yaml";
+
     @Container
     private static PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("Shop")
             .withUsername("postgres")
             .withPassword("veryStrongPassword");
 
+    private static DSLContext dslContext;
+
     @Autowired private ProductService productService;
     @Autowired private ProductRepository productRepository;
+
+    private static final UUID STORE_ID = UUID.randomUUID();
 
     @DynamicPropertySource
     static void databaseProperties(DynamicPropertyRegistry registry) {
@@ -54,14 +72,17 @@ public class ProductServiceIntegrationTest {
         registry.add("spring.datasource.username", database::getUsername);
     }
 
-    @Test
-    @Order(1)
-    public void setup() {
-        var listProducts = getProductList();
+    @BeforeAll
+    public static void setup() throws SQLException, LiquibaseException {
+        migrate();
 
-        for (ProductCommonEntity listProduct : listProducts) {
-            productRepository.addProduct(listProduct);
-        }
+        dslContext = DSL.using(
+                database.getJdbcUrl(),
+                database.getUsername(),
+                database.getPassword()
+        );
+
+        databasePreparation();
     }
 
     @Test
@@ -116,10 +137,11 @@ public class ProductServiceIntegrationTest {
         );
     }
 
-    private List<ProductCommonEntity> getProductList() {
+    private static List<ProductCommonEntity> getProductList() {
         return List.of(
                 new ProductCommonEntity(
                         "1",
+                        STORE_ID,
                         Collections.emptyList(),
                         "Клавиатура",
                         "клавиатура",
@@ -130,6 +152,7 @@ public class ProductServiceIntegrationTest {
                 ),
                 new ProductCommonEntity(
                         "2",
+                        STORE_ID,
                         Collections.emptyList(),
                         "Мышь",
                         "мышь",
@@ -139,6 +162,58 @@ public class ProductServiceIntegrationTest {
                         "{}"
                 )
         );
+    }
+
+    private static void migrate() throws SQLException, LiquibaseException {
+        var connection = DataSourceBuilder.create()
+                .url(database.getJdbcUrl())
+                .username(database.getUsername())
+                .password(database.getPassword())
+                .build()
+                .getConnection();
+
+        Database database = DatabaseFactory.getInstance()
+                .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+
+        Liquibase liquibase = new Liquibase(CHANGELOG_FILE_PATH, new ClassLoaderResourceAccessor(), database);
+
+        liquibase.update();
+    }
+
+    private static void databasePreparation() {
+        dslContext.insertInto(CLIENT)
+                .set(CLIENT.CLIENT_ID, UUID.randomUUID())
+                .set(CLIENT.NAME, "Gordey")
+                .set(CLIENT.EMAIL, "ggwp@mail.ru")
+                .set(CLIENT.PASSWORD, "12345678")
+                .set(CLIENT.BIRTH_DATE, OffsetDateTime.now())
+                .set(CLIENT.GENDER, "MALE")
+                .set(CLIENT.CREATED_DATE, OffsetDateTime.now())
+                .execute();
+
+        dslContext.insertInto(STORE)
+                .set(STORE.STORE_ID, STORE_ID)
+                .set(STORE.NAME, "Рога и копыта")
+                .execute();
+
+        var listProducts = getProductList();
+
+        for (ProductCommonEntity product : listProducts) {
+            addProductInDatabase(product);
+        }
+    }
+
+    private static void addProductInDatabase(ProductCommonEntity entity) {
+        dslContext.insertInto(PRODUCT)
+                .set(PRODUCT.CODE, entity.code())
+                .set(PRODUCT.STORE_ID, entity.storeId())
+                .set(PRODUCT.NAME, entity.name())
+                .set(PRODUCT.NORMALIZED_NAME, entity.normalizeName())
+                .set(PRODUCT.PRICE, entity.price())
+                .set(PRODUCT.RATING, entity.rating())
+                .set(PRODUCT.ORDER_QUANTITY, entity.orderQuantity())
+                .set(PRODUCT.ADDITIONAL_INFO, JSONB.valueOf(entity.additionalInfo()))
+                .execute();
     }
 
     private List<ProductCommonDto> getSortedProducts(List<ProductCommonDto> products, Comparator<ProductCommonDto> comparator) {

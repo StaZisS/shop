@@ -28,6 +28,7 @@ CREATE OR REPLACE FUNCTION get_products_paged(
     RETURNS TABLE
             (
                 code            VARCHAR(60),
+                store_id        UUID,
                 name            VARCHAR(120),
                 normalized_name VARCHAR(120),
                 price           DECIMAL,

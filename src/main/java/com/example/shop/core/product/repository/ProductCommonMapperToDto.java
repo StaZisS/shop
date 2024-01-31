@@ -6,7 +6,7 @@ import org.jooq.RecordMapper;
 
 import java.util.Collections;
 
-public class ProductCommonMapper implements RecordMapper<GetProductsPagedRecord, ProductCommonDto> {
+public class ProductCommonMapperToDto implements RecordMapper<GetProductsPagedRecord, ProductCommonDto> {
     @Override
     public ProductCommonDto map(GetProductsPagedRecord productRecord) {
         return new ProductCommonDto(
