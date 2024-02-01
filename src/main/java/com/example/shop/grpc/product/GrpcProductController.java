@@ -1,4 +1,4 @@
-package com.example.shop.grpc;
+package com.example.shop.grpc.product;
 
 import com.example.shop.core.product.service.ProductService;
 import io.grpc.stub.StreamObserver;
@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 import product.GetProductPageRequest;
 import product.GetProductPageResponse;
-import product.GetProductPageServiceGrpc;
+import product.GetProductPageServiceGrpc.GetProductPageServiceImplBase;
 
 @GrpcService
 @RequiredArgsConstructor
-public class GrpcProductController extends GetProductPageServiceGrpc.GetProductPageServiceImplBase {
+public class GrpcProductController extends GetProductPageServiceImplBase {
     private final ProductService productService;
 
     @Override

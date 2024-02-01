@@ -1,4 +1,4 @@
-package com.example.shop.grpc;
+package com.example.shop.grpc.product;
 
 import com.example.shop.public_interface.product.FilterDto;
 import com.example.shop.public_interface.product.ProductPageDto;

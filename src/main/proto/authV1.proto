@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package auth;
+
+option java_multiple_files = true;
+
+message RegisterRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  google.protobuf.Timestamp birth_date = 4;
+  string gender = 5;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message RefreshJwtRequest {
+  string refresh_token = 1;
+}
+
+message JwtResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (JwtResponse);
+  rpc Login(LoginRequest) returns (JwtResponse);
+  rpc GetAccessToken(RefreshJwtRequest) returns (JwtResponse);
+  rpc GetRefreshToken(RefreshJwtRequest) returns (JwtResponse);
+  rpc Logout(RefreshJwtRequest) returns (google.protobuf.Empty);
+}
