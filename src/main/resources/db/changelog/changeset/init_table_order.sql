@@ -6,13 +6,14 @@ CREATE
 
 CREATE TABLE Orders
 (
-    order_id      UUID PRIMARY KEY,
-    client_id     UUID        NOT NULL,
-    total_price   DECIMAL     NOT NULL,
-    status        VARCHAR(30) NOT NULL CHECK ( status IN ('PROCESSING', 'APPLY', 'IN_DELIVER', 'DELIVERED') ),
-    creation_date timestamp with time zone,
-    track_number  VARCHAR(120),
-    address       VARCHAR(120),
+    order_id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    client_id             UUID         NOT NULL,
+    address_delivery_code VARCHAR(60)  NOT NULL,
+    address_delivery      VARCHAR(120) NOT NULL,
+    total_price           DECIMAL      NOT NULL,
+    status                VARCHAR(30)  NOT NULL CHECK ( status IN ('PROCESSING', 'APPLY', 'CANCELED', 'IN_DELIVER', 'DELIVERED') ),
+    creation_date         timestamp with time zone,
+    track_number          VARCHAR(120),
     FOREIGN KEY (client_id) REFERENCES Client (client_id)
 );
 

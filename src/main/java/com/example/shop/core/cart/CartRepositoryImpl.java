@@ -5,6 +5,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.example.shop.public_.tables.Cart.CART;
@@ -13,6 +14,7 @@ import static com.example.shop.public_.tables.Cart.CART;
 @RequiredArgsConstructor
 public class CartRepositoryImpl implements CartRepository {
     private final DSLContext create;
+    private final CartEntityMapper cartEntityMapper = new CartEntityMapper();
 
     @Override
     public int getCountProduct(UUID clientId, String productCode) {
@@ -37,6 +39,25 @@ public class CartRepositoryImpl implements CartRepository {
     @Override
     public void deleteProductPosition(UUID clientId, String productCode) {
         deletePosition(clientId, productCode, create);
+    }
+
+    @Override
+    public List<CartEntity> getListCartEntity(List<String> productsCode, UUID clientId) {
+        return create.selectFrom(CART)
+                .where(CART.CLIENT_ID.eq(clientId))
+                .and(CART.PRODUCT_CODE.in(productsCode))
+                .fetch(cartEntityMapper);
+    }
+
+    @Override
+    public void deletePositions(List<String> productsCode, UUID clientId) {
+        create.transaction(configuration -> {
+            final DSLContext ctx = DSL.using(configuration);
+
+            for (var productCode : productsCode) {
+                deletePosition(clientId, productCode, ctx);
+            }
+        });
     }
 
     private void updatePosition(CartEntity entity, DSLContext localCtx) {

@@ -1,6 +1,7 @@
 package com.example.shop.core.product.repository;
 
 import com.example.shop.core.util.QueryTool;
+import com.example.shop.public_.tables.records.ProductRecord;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
 import com.example.shop.public_interface.product.FilterDto;
@@ -10,10 +11,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jooq.JSONB;
 import org.jooq.Name;
+import org.jooq.RecordMapper;
 import org.springframework.stereotype.Repository;
 import org.jooq.DSLContext;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -96,5 +99,22 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .from(PRODUCT)
                 .where(PRODUCT.NORMALIZED_NAME.contains(normalizedName))
                 .execute();
+    }
+
+    @Override
+    public Optional<ProductCommonEntity> getCommonProduct(String productCode) {
+        return create.selectFrom(PRODUCT)
+                .where(PRODUCT.CODE.eq(productCode))
+                .fetchOptional(productRecord -> new ProductCommonEntity(
+                        productRecord.getCode(),
+                        productRecord.getStoreId(),
+                        Collections.emptyList(),
+                        productRecord.getName(),
+                        productRecord.getNormalizedName(),
+                        productRecord.getPrice(),
+                        productRecord.getRating(),
+                        productRecord.getOrderQuantity(),
+                        productRecord.getAdditionalInfo().data()
+                ));
     }
 }
