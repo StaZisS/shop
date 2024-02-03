@@ -32,13 +32,8 @@ public class ClientService {
         return clientRepository.getClientByEmail(email);
     }
 
-    public Optional<ClientEntity> getByClientId(String clientId) {
-        try {
-            final UUID clientIdUuid = UUID.fromString(clientId);
-            return clientRepository.getClientByClientId(clientIdUuid);
-        } catch (IllegalArgumentException e) {
-            throw new ExceptionInApplication("Не удалось распарсить clientId", ExceptionType.ILLEGAL);
-        }
+    public Optional<ClientEntity> getByClientId(UUID clientId) {
+        return clientRepository.getClientByClientId(clientId);
     }
 
     private ClientEntity toFormEntityFromDto(ClientCreateDto dto) {

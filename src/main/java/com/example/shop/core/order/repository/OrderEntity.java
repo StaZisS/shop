@@ -1,8 +1,7 @@
-package com.example.shop.core.order;
+package com.example.shop.core.order.repository;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 public record OrderEntity(

@@ -106,7 +106,7 @@ public class AuthServiceIntegrationTest {
 
         var jwtTokens = authService.register(registerDto);
 
-        when(clientService.getByClientId(clientEntity.clientId().toString()))
+        when(clientService.getByClientId(clientEntity.clientId()))
                 .thenReturn(Optional.of(clientEntity));
 
         var jwtAccessToken = authService.getAccessToken(jwtTokens.refreshToken());
@@ -141,7 +141,7 @@ public class AuthServiceIntegrationTest {
 
         var jwtTokens = authService.register(registerDto);
 
-        when(clientService.getByClientId(clientEntity.clientId().toString()))
+        when(clientService.getByClientId(clientEntity.clientId()))
                 .thenReturn(Optional.of(clientEntity));
 
         var newJwtTokens = authService.refresh(jwtTokens.refreshToken());
@@ -178,7 +178,7 @@ public class AuthServiceIntegrationTest {
 
         authService.logout(jwtTokens.refreshToken());
 
-        when(clientService.getByClientId(clientEntity.clientId().toString()))
+        when(clientService.getByClientId(clientEntity.clientId()))
                 .thenReturn(Optional.of(clientEntity));
 
         assertThrows(ExceptionInApplication.class, () -> authService.getAccessToken(jwtTokens.refreshToken()));

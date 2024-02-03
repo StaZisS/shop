@@ -15,6 +15,6 @@ public record OrderDetailsDto(
         String status,
         OffsetDateTime creationDate,
         String trackNumber,
-        List<ProductCommonDto> products
+        List<ProductDetailsDto> products
 ) {
 }

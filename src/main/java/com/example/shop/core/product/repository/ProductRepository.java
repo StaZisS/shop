@@ -11,4 +11,5 @@ public interface ProductRepository {
     Optional<ProductCommonEntity> addProduct(ProductCommonEntity entity);
     int getCountProducts(String query);
     Optional<ProductCommonEntity> getCommonProduct(String productCode);
+    List<ProductCommonEntity> getCommonProducts(List<String> productsCode);
 }

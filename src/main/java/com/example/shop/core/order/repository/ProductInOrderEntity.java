@@ -1,4 +1,4 @@
-package com.example.shop.core.order;
+package com.example.shop.core.order.repository;
 
 import java.util.UUID;
 

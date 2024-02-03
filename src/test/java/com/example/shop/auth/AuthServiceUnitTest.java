@@ -171,7 +171,7 @@ public class AuthServiceUnitTest {
 
         when(refreshRepository.getRefreshTokenById(refreshTokenEntity.getTokenId()))
                 .thenReturn(Optional.of(refreshTokenEntity));
-        when(clientService.getByClientId(clientId))
+        when(clientService.getByClientId(UUID.fromString(clientId)))
                 .thenReturn(Optional.of(clientEntity));
 
         var jwtToken = authService.getAccessToken(refreshToken);
@@ -202,7 +202,7 @@ public class AuthServiceUnitTest {
 
         when(refreshRepository.getRefreshTokenById(refreshTokenEntity.getTokenId()))
                 .thenReturn(Optional.of(refreshTokenEntity));
-        when(clientService.getByClientId(clientId))
+        when(clientService.getByClientId(UUID.fromString(clientId)))
                 .thenReturn(Optional.of(clientEntity));
 
         var jwtTokens = authService.refresh(refreshToken);

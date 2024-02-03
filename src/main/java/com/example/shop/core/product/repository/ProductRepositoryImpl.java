@@ -117,4 +117,21 @@ public class ProductRepositoryImpl implements ProductRepository {
                         productRecord.getAdditionalInfo().data()
                 ));
     }
+
+    @Override
+    public List<ProductCommonEntity> getCommonProducts(List<String> productsCode) {
+        return create.selectFrom(PRODUCT)
+                .where(PRODUCT.CODE.in(productsCode))
+                .fetch(productRecord -> new ProductCommonEntity(
+                        productRecord.getCode(),
+                        productRecord.getStoreId(),
+                        Collections.emptyList(),
+                        productRecord.getName(),
+                        productRecord.getNormalizedName(),
+                        productRecord.getPrice(),
+                        productRecord.getRating(),
+                        productRecord.getOrderQuantity(),
+                        productRecord.getAdditionalInfo().data()
+                ));
+    }
 }

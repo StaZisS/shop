@@ -13,6 +13,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -43,7 +45,7 @@ public class AuthService {
 
         final String clientId = tokenService.getClientIdInRefreshToken(refreshToken);
 
-        final ClientEntity client = clientService.getByClientId(clientId)
+        final ClientEntity client = clientService.getByClientId(tryParseUUID(clientId))
                 .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
         var dataForGenerateToken = forGenerateToken(client);
 
@@ -58,7 +60,7 @@ public class AuthService {
 
         tokenService.deleteRefreshToken(tokenId);
 
-        final ClientEntity client = clientService.getByClientId(clientId)
+        final ClientEntity client = clientService.getByClientId(tryParseUUID(clientId))
                 .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
         var dataForGenerateToken = forGenerateToken(client);
 
@@ -77,4 +79,11 @@ public class AuthService {
         return new DataForGenerateToken(entity.clientId().toString());
     }
 
+    private UUID tryParseUUID(String id) {
+        try {
+            return UUID.fromString(id);
+        } catch (Exception e) {
+            throw new ExceptionInApplication("Не удалось распарсить ClientId", ExceptionType.INVALID);
+        }
+    }
 }
