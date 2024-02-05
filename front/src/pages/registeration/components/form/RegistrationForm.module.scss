@@ -1,0 +1,57 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: var(--Gray);
+  padding: 28px;
+  border-radius: 10px;
+  margin-top: 40px;
+
+  select {
+    height: 28px;
+    border-radius: 6px;
+  }
+}
+
+.registerButton {
+  text-decoration: none;
+  color: var(--font-dark-gray);
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  background-color: var(--yellow-button);
+  text-align: center;
+}
+
+.formWrapper {
+  padding: 12px;
+  border-radius: 8px;
+  background-color: var(--Gray);
+  display: flex;
+  flex-direction: column;
+}
+
+.formItem {
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+  padding-bottom: 12px;
+
+  input {
+    border-radius: 8px;
+    height: 18px;
+    padding: 4px;
+  }
+
+  label {
+    font-size: 18px;
+  }
+}
+
+.addressChain {
+  border: 1px solid #5d5d5d;
+  padding: 16px;
+  border-radius: 6px;
+}

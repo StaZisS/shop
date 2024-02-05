@@ -1,0 +1,116 @@
+.formWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+
+  a {
+    display: unset;
+  }
+
+  span {
+    font-size: 12px;
+  }
+}
+
+.form {
+  padding: 20px;
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  background-color: var(--Gray);
+  border-radius: 8px;
+
+  a:hover {
+    display: unset;
+  }
+
+  input {
+    border-radius: 4px;
+  }
+
+  label {
+    font-size: 18px;
+  }
+
+  width: 300px;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.headerTitle {
+  h2 {
+    color: var(--font-dark-gray);
+  }
+}
+
+.loginButton {
+  text-decoration: none;
+  color: var(--font-dark-gray);
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  background-color: var(--yellow-button);
+  text-align: center;
+}
+
+.linkToRegister {
+  color: var(--font-dark-gray);
+
+  &:hover {
+    color: var(--secondary-yellow);
+  }
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+  position: relative;
+  background-color: var(--Gray);
+
+  &__label {
+    display: block;
+    position: absolute;
+    top: 0;
+    line-height: 40px;
+    color: #aaa;
+    left: 5px;
+    padding: 0 5px;
+    transition: line-height 200ms ease-in-out, font-size 200ms ease-in-out,
+    top 200ms ease-in-out;
+
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 90%;
+    height: 40px;
+    background-color: var(--Gray);
+    color: #fff;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 0 10px;
+
+    &:not(:placeholder-shown),
+    &:focus {
+      + label {
+        line-height: 10px;
+        opacity: 1;
+
+        font-size: 16px;
+        top: -22px;
+      }
+    }
+
+    &:focus {
+      outline: none;
+      border: 2px solid #fff;
+
+      + label {
+        color: #aaa;
+      }
+    }
+  }
+}
