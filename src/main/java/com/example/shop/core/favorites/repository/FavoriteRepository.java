@@ -1,4 +1,4 @@
-package com.example.shop.core.favorites;
+package com.example.shop.core.favorites.repository;
 
 import java.util.UUID;
 

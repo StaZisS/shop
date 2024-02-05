@@ -1,10 +1,13 @@
-package com.example.shop.favorites;
+package com.example.shop.review;
 
 import com.example.shop.core.client.repository.ClientEntity;
-import com.example.shop.core.favorites.repository.FavoriteRepository;
-import com.example.shop.core.favorites.service.FavoriteService;
+import com.example.shop.core.order.repository.DeliveryStatus;
+import com.example.shop.core.order.repository.OrderEntity;
+import com.example.shop.core.order.repository.ProductInOrderEntity;
 import com.example.shop.core.product.repository.ProductCommonEntity;
-import com.example.shop.public_interface.favorites.FavoriteDto;
+import com.example.shop.core.review.service.ReviewService;
+import com.example.shop.public_interface.exception.ExceptionInApplication;
+import com.example.shop.public_interface.review.ReviewCreateDto;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -31,19 +34,21 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static com.example.shop.public_.tables.Client.CLIENT;
 import static com.example.shop.public_.tables.Product.PRODUCT;
 import static com.example.shop.public_.tables.Store.STORE;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.example.shop.public_.tables.Orders.ORDERS;
+import static com.example.shop.public_.tables.ProductInOrder.PRODUCT_IN_ORDER;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Testcontainers
-@SpringJUnitConfig(classes = {FavoriteIntegrationTestConfiguration.class})
+@SpringJUnitConfig(classes = {ReviewIntegrationTestConfiguration.class})
 @ActiveProfiles("test")
-public class FavoriteServiceIntegrationTest {
+public class ReviewServiceIntegrationTest {
     private static final String CHANGELOG_FILE_PATH = "db/changelog/db.changelog-master.yaml";
     private static final UUID STORE_ID = UUID.randomUUID();
 
@@ -55,8 +60,7 @@ public class FavoriteServiceIntegrationTest {
 
     private static DSLContext dslContext;
 
-    @Autowired private FavoriteService favoriteService;
-    @Autowired private FavoriteRepository favoriteRepository;
+    @Autowired private ReviewService reviewService;
 
     @DynamicPropertySource
     static void databaseProperties(DynamicPropertyRegistry registry) {
@@ -79,7 +83,7 @@ public class FavoriteServiceIntegrationTest {
     }
 
     @Test
-    public void addFavoriteProduct() {
+    public void addReview() {
         var clientId = UUID.randomUUID();
         var clientEmail = "ggwp@mail.ru";
         var productCode = "1";
@@ -88,18 +92,14 @@ public class FavoriteServiceIntegrationTest {
         addClientInDatabase(client);
         addProductInDatabase(product);
 
-        var favoriteDto = new FavoriteDto(
-                clientId,
-                productCode
-        );
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.DELIVERED);
 
-        favoriteService.switchFavorite(favoriteDto);
-
-        assertTrue(favoriteRepository.isFavorite(clientId, productCode));
+        var reviewCreateDto = formatReviewCreateDto(clientId, productCode);
+        reviewService.createReview(reviewCreateDto);
     }
 
     @Test
-    public void addAndDeleteFavoriteProduct() {
+    public void addTwoReviewOnOneProduct() {
         var clientId = UUID.randomUUID();
         var clientEmail = "ggwp1@mail.ru";
         var productCode = "2";
@@ -108,18 +108,37 @@ public class FavoriteServiceIntegrationTest {
         addClientInDatabase(client);
         addProductInDatabase(product);
 
-        var favoriteDto = new FavoriteDto(
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.DELIVERED);
+
+        var reviewCreateDto = formatReviewCreateDto(clientId, productCode);
+        reviewService.createReview(reviewCreateDto);
+
+        assertThrows(ExceptionInApplication.class, () -> reviewService.createReview(reviewCreateDto));
+    }
+
+    @Test
+    public void addReviewNotDeliveredProduct() {
+        var clientId = UUID.randomUUID();
+        var clientEmail = "ggwp2@mail.ru";
+        var productCode = "3";
+        var client = formatClient(clientId, clientEmail);
+        var product = formatProduct(productCode);
+        addClientInDatabase(client);
+        addProductInDatabase(product);
+
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.APPLY);
+
+        var reviewCreateDto = formatReviewCreateDto(clientId, productCode);
+        assertThrows(ExceptionInApplication.class, () -> reviewService.createReview(reviewCreateDto));
+    }
+
+    private ReviewCreateDto formatReviewCreateDto(UUID clientId, String productCode) {
+        return new ReviewCreateDto(
                 clientId,
-                productCode
+                productCode,
+                1,
+                "{}"
         );
-
-        favoriteService.switchFavorite(favoriteDto);
-
-        assertTrue(favoriteRepository.isFavorite(clientId, productCode));
-
-        favoriteService.switchFavorite(favoriteDto);
-
-        assertFalse(favoriteRepository.isFavorite(clientId, productCode));
     }
 
     private ClientEntity formatClient(UUID clientId, String email) {
@@ -145,6 +164,27 @@ public class FavoriteServiceIntegrationTest {
                 4.6,
                 34,
                 "{}"
+        );
+    }
+
+    private OrderEntity formatOrder(UUID clientId, DeliveryStatus status) {
+        return new OrderEntity(
+                UUID.randomUUID(),
+                clientId,
+                "",
+                "",
+                BigDecimal.valueOf(0),
+                status,
+                OffsetDateTime.now(),
+                ""
+        );
+    }
+
+    private ProductInOrderEntity formatProductInOrder(UUID orderId, String productCode) {
+        return new ProductInOrderEntity(
+                orderId,
+                productCode,
+                1
         );
     }
 
@@ -194,5 +234,38 @@ public class FavoriteServiceIntegrationTest {
                 .set(CLIENT.GENDER, entity.gender())
                 .set(CLIENT.CREATED_DATE, entity.createdDate())
                 .execute();
+    }
+
+    private static void addOrderInDatabase(OrderEntity entity) {
+        dslContext.insertInto(ORDERS)
+                .set(ORDERS.ORDER_ID, entity.orderId())
+                .set(ORDERS.CLIENT_ID, entity.clientId())
+                .set(ORDERS.ADDRESS_DELIVERY_CODE, entity.addressDeliveryCode())
+                .set(ORDERS.ADDRESS_DELIVERY, entity.addressDelivery())
+                .set(ORDERS.TOTAL_PRICE, entity.totalPrice())
+                .set(ORDERS.STATUS, entity.status().name())
+                .set(ORDERS.CREATION_DATE, entity.creationDate())
+                .set(ORDERS.TRACK_NUMBER, entity.trackNumber())
+                .execute();
+    }
+
+    private static void addProductInOrderInDatabase(ProductInOrderEntity entity) {
+        dslContext.insertInto(PRODUCT_IN_ORDER)
+                .set(PRODUCT_IN_ORDER.ORDER_ID, entity.orderId())
+                .set(PRODUCT_IN_ORDER.PRODUCT_CODE, entity.productCode())
+                .set(PRODUCT_IN_ORDER.COUNT_PRODUCT, entity.countProduct())
+                .execute();
+    }
+
+    private void createOrderWithProducts(List<String> productsCode, UUID clientId, DeliveryStatus status) {
+        var order = formatOrder(clientId, status);
+        var productsInOrder = productsCode.stream()
+                .map(product -> formatProductInOrder(order.orderId(), product))
+                .toList();
+
+        addOrderInDatabase(order);
+        for(var product : productsInOrder) {
+            addProductInOrderInDatabase(product);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.shop.order;
 
-import com.example.shop.core.cart.CartEntity;
+import com.example.shop.core.cart.repository.CartEntity;
 import com.example.shop.core.client.repository.ClientEntity;
 import com.example.shop.core.order.repository.DeliveryStatus;
 import com.example.shop.core.order.repository.OrderRepository;

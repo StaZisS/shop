@@ -10,4 +10,5 @@ public interface OrderRepository {
     List<ProductInOrderEntity> getProductsInOrder(UUID orderId);
     void cancelOrder(UUID orderId);
     List<OrderEntity> getOrders(UUID clientId);
+    List<OrderEntity> getAllOrdersWithProduct(UUID clientId, String productCode);
 }

@@ -1,4 +1,4 @@
-package com.example.shop.core.cart;
+package com.example.shop.core.cart.repository;
 
 import java.util.UUID;
 

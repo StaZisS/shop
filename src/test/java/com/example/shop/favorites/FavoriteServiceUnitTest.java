@@ -1,8 +1,8 @@
 package com.example.shop.favorites;
 
-import com.example.shop.core.favorites.FavoriteRepository;
-import com.example.shop.core.favorites.FavoriteRepositoryImpl;
-import com.example.shop.core.favorites.FavoriteService;
+import com.example.shop.core.favorites.repository.FavoriteRepository;
+import com.example.shop.core.favorites.repository.FavoriteRepositoryImpl;
+import com.example.shop.core.favorites.service.FavoriteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

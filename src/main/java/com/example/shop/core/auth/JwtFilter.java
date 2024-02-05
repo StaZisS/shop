@@ -1,7 +1,7 @@
 package com.example.shop.core.auth;
 
 import com.example.shop.core.auth.provider.JwtProvider;
-import com.example.shop.core.auth.uril.JwtUtils;
+import com.example.shop.core.auth.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,8 +1,8 @@
 package com.example.shop.cart;
 
-import com.example.shop.core.cart.CartRepository;
-import com.example.shop.core.cart.CartRepositoryImpl;
-import com.example.shop.core.cart.CartService;
+import com.example.shop.core.cart.repository.CartRepository;
+import com.example.shop.core.cart.repository.CartRepositoryImpl;
+import com.example.shop.core.cart.service.CartService;
 import com.example.shop.public_interface.cart.CartDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import org.junit.jupiter.api.BeforeEach;

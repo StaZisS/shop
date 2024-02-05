@@ -1,5 +1,7 @@
-package com.example.shop.core.cart;
+package com.example.shop.core.cart.service;
 
+import com.example.shop.core.cart.repository.CartEntity;
+import com.example.shop.core.cart.repository.CartRepository;
 import com.example.shop.public_interface.cart.CartDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;

@@ -1,7 +1,7 @@
 package com.example.shop.cart;
 
-import com.example.shop.core.cart.CartRepository;
-import com.example.shop.core.cart.CartService;
+import com.example.shop.core.cart.repository.CartRepository;
+import com.example.shop.core.cart.service.CartService;
 import com.example.shop.core.client.repository.ClientEntity;
 import com.example.shop.core.product.repository.ProductCommonEntity;
 import com.example.shop.public_interface.cart.CartDto;
@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static com.example.shop.public_.tables.Client.CLIENT;

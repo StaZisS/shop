@@ -1,6 +1,6 @@
 package com.example.shop.order;
 
-import com.example.shop.core.cart.CartRepositoryImpl;
+import com.example.shop.core.cart.repository.CartRepositoryImpl;
 import com.example.shop.core.client.repository.ClientRepositoryImpl;
 import com.example.shop.core.order.repository.OrderRepositoryImpl;
 import com.example.shop.core.order.service.OrderService;

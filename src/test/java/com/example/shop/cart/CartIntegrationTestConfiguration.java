@@ -1,7 +1,7 @@
 package com.example.shop.cart;
 
-import com.example.shop.core.cart.CartRepositoryImpl;
-import com.example.shop.core.cart.CartService;
+import com.example.shop.core.cart.repository.CartRepositoryImpl;
+import com.example.shop.core.cart.service.CartService;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jooq.JooqTest;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.example.shop.core.favorites;
+package com.example.shop.core.favorites.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;

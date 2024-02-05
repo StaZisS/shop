@@ -1,7 +1,10 @@
 package com.example.shop.core.order.repository;
 
+import com.example.shop.public_.tables.records.OrdersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.Record1;
+import org.jooq.RecordMapper;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
@@ -66,6 +69,26 @@ public class OrderRepositoryImpl implements OrderRepository {
         return create.selectFrom(ORDERS)
                 .where(ORDERS.CLIENT_ID.eq(clientId))
                 .fetch(orderEntityMapper);
+    }
+
+    @Override
+    public List<OrderEntity> getAllOrdersWithProduct(UUID clientId, String productCode) {
+        return create.select(ORDERS)
+                .from(ORDERS)
+                .join(PRODUCT_IN_ORDER)
+                .on(PRODUCT_IN_ORDER.ORDER_ID.eq(ORDERS.ORDER_ID))
+                .and(PRODUCT_IN_ORDER.PRODUCT_CODE.eq(productCode))
+                .where(ORDERS.CLIENT_ID.eq(clientId))
+                .fetch(record1 -> new OrderEntity(
+                        record1.value1().getOrderId(),
+                        record1.value1().getClientId(),
+                        record1.value1().getAddressDeliveryCode(),
+                        record1.value1().getAddressDelivery(),
+                        record1.value1().getTotalPrice(),
+                        DeliveryStatus.getDeliveryStatusByName(record1.value1().getStatus()),
+                        record1.value1().getCreationDate(),
+                        record1.value1().getTrackNumber()
+                ));
     }
 
     private void createProductsInOrder(List<ProductInOrderEntity> productsInOrder, DSLContext localCtx) {

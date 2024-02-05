@@ -1,4 +1,4 @@
-package com.example.shop.core.auth.uril;
+package com.example.shop.core.auth.util;
 
 import com.example.shop.core.auth.JwtAuthentication;
 import com.example.shop.core.auth.Role;

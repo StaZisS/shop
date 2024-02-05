@@ -1,4 +1,4 @@
-package com.example.shop.core.cart;
+package com.example.shop.core.cart.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
