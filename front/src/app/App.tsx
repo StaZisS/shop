@@ -5,6 +5,8 @@ import {Header} from "@/shared/components/header/ui/Header";
 import Footer from "@/shared/components/footer/Footer";
 import RegistrationPage from "@/pages/registeration/ui/RegistrationPage.tsx";
 import LoginPage from "@/pages/login/ui/LoginPage.tsx";
+import ProfilePage from "@/pages/profile/ui/ProfilePage.tsx";
+import PrivateRoute from "@/app/PrivateRouter.tsx";
 
 function App() {
     return (
@@ -15,6 +17,15 @@ function App() {
                 <Routes>
                     <Route path="/registration" element={<RegistrationPage/>}/>
                     <Route path="/login" element={<LoginPage/>}/>
+                    <Route
+                        path="/profile"
+                        element={
+                            <PrivateRoute>
+                                {" "}
+                                <ProfilePage/>{" "}
+                            </PrivateRoute>
+                        }
+                    />
                 </Routes>
 
                 <Footer/>
