@@ -36,4 +36,28 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                 .set(REVIEW.REVIEW_BODY, JSONB.valueOf(entity.body()))
                 .execute();
     }
+
+    @Override
+    public Optional<ReviewEntity> getReviewById(UUID reviewId) {
+        return create.selectFrom(REVIEW)
+                .where(REVIEW.REVIEW_ID.eq(reviewId))
+                .fetchOptional(reviewEntityMapper);
+    }
+
+    @Override
+    public void updateReview(ReviewEntity entity) {
+        create.update(REVIEW)
+                .set(REVIEW.RATING, entity.rating())
+                .set(REVIEW.REVIEW_BODY, JSONB.valueOf(entity.body()))
+                .set(REVIEW.MODIFIED_TIME, entity.modifiedTime())
+                .where(REVIEW.REVIEW_ID.eq(entity.reviewId()))
+                .execute();
+    }
+
+    @Override
+    public void deleteReview(UUID reviewId) {
+        create.deleteFrom(REVIEW)
+                .where(REVIEW.REVIEW_ID.eq(reviewId))
+                .execute();
+    }
 }

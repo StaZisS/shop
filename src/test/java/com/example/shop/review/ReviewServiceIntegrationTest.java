@@ -5,9 +5,14 @@ import com.example.shop.core.order.repository.DeliveryStatus;
 import com.example.shop.core.order.repository.OrderEntity;
 import com.example.shop.core.order.repository.ProductInOrderEntity;
 import com.example.shop.core.product.repository.ProductCommonEntity;
+import com.example.shop.core.review.repository.ReviewEntity;
+import com.example.shop.core.review.repository.ReviewRepository;
 import com.example.shop.core.review.service.ReviewService;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.review.ReviewCreateDto;
+import com.example.shop.public_interface.review.ReviewDeleteDto;
+import com.example.shop.public_interface.review.ReviewUpdateDto;
+import com.github.dockerjava.api.exception.NotFoundException;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -42,7 +47,10 @@ import static com.example.shop.public_.tables.Product.PRODUCT;
 import static com.example.shop.public_.tables.Store.STORE;
 import static com.example.shop.public_.tables.Orders.ORDERS;
 import static com.example.shop.public_.tables.ProductInOrder.PRODUCT_IN_ORDER;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
@@ -61,6 +69,7 @@ public class ReviewServiceIntegrationTest {
     private static DSLContext dslContext;
 
     @Autowired private ReviewService reviewService;
+    @Autowired private ReviewRepository reviewRepository;
 
     @DynamicPropertySource
     static void databaseProperties(DynamicPropertyRegistry registry) {
@@ -130,6 +139,102 @@ public class ReviewServiceIntegrationTest {
 
         var reviewCreateDto = formatReviewCreateDto(clientId, productCode);
         assertThrows(ExceptionInApplication.class, () -> reviewService.createReview(reviewCreateDto));
+    }
+
+    @Test
+    public void updateReview() {
+        var clientId = UUID.randomUUID();
+        var clientEmail = "ggwp3@mail.ru";
+        var productCode = "4";
+        var client = formatClient(clientId, clientEmail);
+        var product = formatProduct(productCode);
+        addClientInDatabase(client);
+        addProductInDatabase(product);
+
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.DELIVERED);
+
+        var reviewCreateDto = formatReviewCreateDto(clientId, productCode);
+        var reviewId = reviewService.createReview(reviewCreateDto);
+
+        var newRating = 5;
+        var newBody = "{}";
+
+        var reviewUpdateDto = new ReviewUpdateDto(
+                reviewId,
+                clientId,
+                newRating,
+                newBody
+        );
+        reviewService.updateReview(reviewUpdateDto);
+
+        var review = reviewRepository.getReviewById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Отзыв не найден"));
+
+        assertEquals(newRating, review.rating());
+        assertEquals(newBody, review.body());
+        assertNotNull(review.modifiedTime());
+    }
+
+    @Test
+    public void updateNotExistReview() {
+        var clientId = UUID.randomUUID();
+        var clientEmail = "ggwp4@mail.ru";
+        var productCode = "5";
+        var client = formatClient(clientId, clientEmail);
+        var product = formatProduct(productCode);
+        addClientInDatabase(client);
+        addProductInDatabase(product);
+
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.DELIVERED);
+
+        var newRating = 5;
+        var newBody = "{}";
+
+        var reviewUpdateDto = new ReviewUpdateDto(
+                UUID.randomUUID(),
+                clientId,
+                newRating,
+                newBody
+        );
+        assertThrows(ExceptionInApplication.class, () -> reviewService.updateReview(reviewUpdateDto));
+    }
+
+    @Test
+    public void deleteReview() {
+        var clientId = UUID.randomUUID();
+        var clientEmail = "ggwp5@mail.ru";
+        var productCode = "6";
+        var client = formatClient(clientId, clientEmail);
+        var product = formatProduct(productCode);
+        addClientInDatabase(client);
+        addProductInDatabase(product);
+
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.DELIVERED);
+
+        var reviewCreateDto = formatReviewCreateDto(clientId, productCode);
+        var reviewId = reviewService.createReview(reviewCreateDto);
+
+        var reviewDeleteDto = new ReviewDeleteDto(reviewId, clientId);
+        reviewService.deleteReview(reviewDeleteDto);
+
+        var review = reviewRepository.getReviewById(reviewId);
+        assertTrue(review.isEmpty());
+    }
+
+    @Test
+    public void deleteNotExistReview() {
+        var clientId = UUID.randomUUID();
+        var clientEmail = "ggwp6@mail.ru";
+        var productCode = "7";
+        var client = formatClient(clientId, clientEmail);
+        var product = formatProduct(productCode);
+        addClientInDatabase(client);
+        addProductInDatabase(product);
+
+        createOrderWithProducts(List.of(productCode), clientId, DeliveryStatus.DELIVERED);
+
+        var reviewDeleteDto = new ReviewDeleteDto(UUID.randomUUID(), clientId);
+        assertThrows(ExceptionInApplication.class, () -> reviewService.deleteReview(reviewDeleteDto));
     }
 
     private ReviewCreateDto formatReviewCreateDto(UUID clientId, String productCode) {
