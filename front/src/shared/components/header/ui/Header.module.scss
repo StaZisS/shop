@@ -1,0 +1,49 @@
+.header {
+  display: flex;
+  align-items: center;
+  height: 94px;
+  padding-left: 5vw;
+  padding-right: 6vw;
+  justify-content: space-between;
+  background-color: var(--Gray);
+
+  span {
+    padding: 4px;
+    color: var(--secondary-yellow);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    font-family: Alegreya, serif;
+    line-height: 14px;
+    text-transform: uppercase;
+  }
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .item {
+    color: var(--font-dark-gray);
+    @media screen and (max-width: 768px) {
+      display: none;
+
+    }
+  }
+}
+
+.authButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  a {
+    color: var(--font-dark-gray);
+
+    &:hover {
+      color: var(--yellow-button);
+      transition: 0.3s ease-in-out;
+    }
+  }
+}

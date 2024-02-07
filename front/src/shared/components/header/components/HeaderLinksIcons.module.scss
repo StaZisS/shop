@@ -1,0 +1,29 @@
+.HeaderLinksIcons {
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+
+  z-index: 9999;
+  position: fixed;
+  right: 0;
+  top: 10vh;
+  display: flex;
+  flex-direction: column;
+
+  a {
+    display: flex;
+    background-color: rgba(89, 89, 89, 0.3);
+    height: 48px;
+    width: 48px;
+    justify-content: center;
+  }
+
+  .Cart {
+    position: relative;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+}
