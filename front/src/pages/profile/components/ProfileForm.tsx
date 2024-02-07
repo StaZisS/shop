@@ -30,7 +30,7 @@ const ProfileForm = () => {
         onSubmit: async (values) => {
             try {
                 const updatedData : ClientUpdateDto = {
-                    fullName: values.fullName,
+                    name: values.name,
                     birthDate: selectedDate
                         ? new Date(selectedDate!).toISOString()
                         : userData?.birthDate,
@@ -58,10 +58,10 @@ const ProfileForm = () => {
                         type="text"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.fullName}
+                        value={formik.values.name}
                     />
-                    {formik.touched.fullName && formik.errors.fullName ? (
-                        <div>{formik.errors.fullName}</div>
+                    {formik.touched.name && formik.errors.name ? (
+                        <div>{formik.errors.name}</div>
                     ) : null}
                 </div>
                 <div className={s.formItem}>

@@ -1,5 +1,5 @@
 export interface UserData {
-    fullName: string;
+    name: string;
     birthDate: string;
     gender: string;
     address: string;
@@ -8,7 +8,7 @@ export interface UserData {
 }
 
 export interface ClientUpdateDto {
-    fullName: string;
+    name: string;
     birthDate: string | undefined;
     gender: string;
     email: string;

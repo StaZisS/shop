@@ -1,15 +1,16 @@
 import axios from "axios";
 import {BASE_URL} from "@/shared/constants/url.ts";
 import {ClientUpdateDto, UserData} from "@/modules/profile/types.ts";
+import {ACCESS_TOKEN_NAME} from "@/shared/constants/jwt.ts";
 
 
 export const fetchUserProfile = async (): Promise<UserData | undefined> => {
     try {
         const response = await axios.get(
-            `${BASE_URL}account/profile`,
+            `${BASE_URL}profile`,
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_NAME)}`,
                 },
             }
         );
@@ -23,11 +24,11 @@ export const fetchUserProfile = async (): Promise<UserData | undefined> => {
 export const updateProfile = async (updatedData: ClientUpdateDto) => {
     try {
         await axios.put(
-            `${BASE_URL}account/profile`,
+            `${BASE_URL}profile`,
             updatedData,
             {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_NAME)}`,
                 },
             }
         );

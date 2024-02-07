@@ -16,6 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,13 +46,7 @@ public class ClientServiceIntegrationTest {
 
     @Test
     public void createClient() {
-        var createClientDto = new ClientCreateDto(
-                "Sasha",
-                "ggwp@gmail.com",
-                "veryStrongPassword",
-                OffsetDateTime.now(),
-                "UNSPECIFIED"
-        );
+        var createClientDto = formatClientCreateDto("ggwp@gmail.com");
 
         clientService.createClient(createClientDto);
 
@@ -66,13 +61,7 @@ public class ClientServiceIntegrationTest {
 
     @Test
     public void createClientWithDuplicatedEmail() {
-        var createClientDto = new ClientCreateDto(
-                "Sasha",
-                "easy@gmail.com",
-                "veryStrongPassword",
-                OffsetDateTime.now(),
-                "UNSPECIFIED"
-        );
+        var createClientDto = formatClientCreateDto("easy@gmail.com");
 
         clientService.createClient(createClientDto);
 
@@ -81,5 +70,32 @@ public class ClientServiceIntegrationTest {
         });
 
         assertEquals(ExceptionType.ALREADY_EXISTS ,thrownException.getType());
+    }
+
+    @Test
+    public void getClientProfile() {
+        var createClientDto = formatClientCreateDto("easy1@gmail.com");
+
+        var clientId = clientService.createClient(createClientDto);
+
+        var profileDto = clientService.getProfile(clientId);
+
+        assertEquals(createClientDto.email(), profileDto.email());
+    }
+
+    @Test
+    public void getNotExistClientProfile() {
+        var randomId = UUID.randomUUID();
+        assertThrows(ExceptionInApplication.class, () -> clientService.getProfile(randomId));
+    }
+
+    private ClientCreateDto formatClientCreateDto(String email) {
+        return new ClientCreateDto(
+                "Sasha",
+                email,
+                "veryStrongPassword",
+                OffsetDateTime.now(),
+                "UNSPECIFIED"
+        );
     }
 }

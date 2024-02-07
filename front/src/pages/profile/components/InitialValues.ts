@@ -1,7 +1,7 @@
 import {UserData} from "@/modules/profile/types.ts";
 
 export const initialValue : UserData = {
-    fullName: "",
+    name: "",
     birthDate: "",
     gender: "",
     address: "",

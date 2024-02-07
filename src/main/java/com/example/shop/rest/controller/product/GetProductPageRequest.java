@@ -1,4 +1,4 @@
-package com.example.shop.rest.controller;
+package com.example.shop.rest.controller.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

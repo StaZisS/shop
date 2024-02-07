@@ -4,7 +4,7 @@ import com.example.shop.core.auth.service.AuthService;
 import com.example.shop.public_interface.auth.JwtResponseDto;
 import com.example.shop.public_interface.auth.LoginDto;
 import com.example.shop.public_interface.client.ClientCreateDto;
-import com.example.shop.rest.controller.mapper.RequestMapper;
+import com.example.shop.rest.controller.product.mapper.RequestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

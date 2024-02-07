@@ -5,6 +5,7 @@ import com.example.shop.core.client.repository.ClientRepository;
 import com.example.shop.core.client.validation.ClientValidationService;
 import com.example.shop.core.util.PasswordTool;
 import com.example.shop.public_interface.client.ClientCreateDto;
+import com.example.shop.public_interface.client.ClientProfileDto;
 import com.example.shop.public_interface.exception.ExceptionInApplication;
 import com.example.shop.public_interface.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,13 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientValidationService clientValidationService;
 
-    public Optional<ClientEntity> createClient(ClientCreateDto dto) {
+    public UUID createClient(ClientCreateDto dto) {
         clientValidationService.validateCreateClient(dto);
 
-        var entity = toFormEntityFromDto(dto);
+        var entity = fromDtoToEntity(dto);
+        clientRepository.createClient(entity);
 
-        return clientRepository.createClient(entity);
+        return entity.clientId();
     }
 
     public Optional<ClientEntity> getByEmail(String email) {
@@ -36,7 +38,18 @@ public class ClientService {
         return clientRepository.getClientByClientId(clientId);
     }
 
-    private ClientEntity toFormEntityFromDto(ClientCreateDto dto) {
+    public ClientProfileDto getProfile(UUID clientId) {
+        var clientEntity = clientRepository.getClientByClientId(clientId)
+                .orElseThrow(() -> new ExceptionInApplication("Клиент не найден", ExceptionType.NOT_FOUND));
+
+        return formatToDto(clientEntity);
+    }
+
+    public void updateClient() {
+
+    }
+
+    private ClientEntity fromDtoToEntity(ClientCreateDto dto) {
         return new ClientEntity(
                 UUID.randomUUID(),
                 dto.name(),
@@ -45,6 +58,16 @@ public class ClientService {
                 dto.birthDate(),
                 dto.gender(),
                 OffsetDateTime.now()
+        );
+    }
+
+    private ClientProfileDto formatToDto(ClientEntity entity) {
+        return new ClientProfileDto(
+                entity.clientId(),
+                entity.name(),
+                entity.email(),
+                entity.birthDate(),
+                entity.gender()
         );
     }
 }

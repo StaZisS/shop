@@ -81,6 +81,15 @@ public class JwtProvider {
         return jwtRefreshTtlSecond;
     }
 
+    public UUID getAccessTokenClientId(@NonNull String accessToken) {
+        var claims = getAccessClaims(accessToken);
+        try {
+            return UUID.fromString(claims.getSubject());
+        } catch (Exception e) {
+            throw new ExceptionInApplication("Невозможно распарсить clientId", ExceptionType.INVALID);
+        }
+    }
+
     private Claims getClaims(@NonNull String token, @NonNull SecretKey secret) {
         return Jwts.parser()
                 .verifyWith(secret)

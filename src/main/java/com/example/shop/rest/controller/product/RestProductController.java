@@ -1,8 +1,8 @@
-package com.example.shop.rest.controller;
+package com.example.shop.rest.controller.product;
 
 import com.example.shop.core.product.service.ProductService;
 import com.example.shop.public_interface.product.ProductPageDto;
-import com.example.shop.rest.controller.mapper.RequestMapper;
+import com.example.shop.rest.controller.product.mapper.RequestMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,6 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
-import * as Yup from "yup";
 import {loginUser} from "@/modules/auth/thunk";
 import {AppDispatch, RootState} from "@/store/store";
 import {Link, useNavigate} from "react-router-dom";
@@ -8,6 +7,7 @@ import s from "./LoginForm.module.scss";
 import {clearToken, selectIsAuthenticated} from "@/modules/auth/slice";
 import {validationSchema} from "@/pages/login/components/form/Validation.ts";
 import {initialValues} from "@/pages/login/components/form/InitialValues.ts";
+import {ACCESS_TOKEN_NAME} from "@/shared/constants/jwt.ts";
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ const LoginForm = () => {
         selectIsAuthenticated(state)
     );
 
-    if (localStorage.getItem("token") === null) {
+    if (localStorage.getItem(ACCESS_TOKEN_NAME) === null) {
         dispatch(clearToken());
     }
 

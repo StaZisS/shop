@@ -3,6 +3,7 @@ import {AuthData} from "@/modules/auth/types.ts";
 import axios from "axios";
 import {clearToken, setToken} from "@/modules/auth/slice.ts";
 import {BASE_URL} from "@/shared/constants/url.ts";
+import {ACCESS_TOKEN_NAME} from "@/shared/constants/jwt.ts";
 
 export const loginUser = createAsyncThunk(
     "auth/login",
@@ -12,8 +13,8 @@ export const loginUser = createAsyncThunk(
                 `${BASE_URL}auth/login`,
                 data
             );
-            const token = response.data.token;
-            localStorage.setItem("token", token);
+            const token = response.data.accessToken;
+            localStorage.setItem(ACCESS_TOKEN_NAME, token);
             localStorage.setItem("email", data.email);
             dispatch(setToken(token));
         } catch (error) {
@@ -26,17 +27,15 @@ export const logoutUser = createAsyncThunk(
     "auth/logout",
     async (_, {dispatch}) => {
         try {
-            const response = await axios.post(
+            await axios.post(
                 `${BASE_URL}auth/logout`,
                 {},
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_NAME)}`,
                     },
                 }
             );
-
-            localStorage.getItem("token");
             dispatch(clearToken());
             localStorage.clear();
         } catch (error) {

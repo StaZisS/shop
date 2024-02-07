@@ -1,9 +1,9 @@
-package com.example.shop.rest.controller.mapper;
+package com.example.shop.rest.controller.product.mapper;
 
 import com.example.shop.public_interface.client.ClientCreateDto;
 import com.example.shop.public_interface.product.FilterDto;
 import com.example.shop.public_interface.product.SortType;
-import com.example.shop.rest.controller.GetProductPageRequest;
+import com.example.shop.rest.controller.product.GetProductPageRequest;
 import com.example.shop.rest.controller.auth.RegisterDto;
 
 public class RequestMapper {
