@@ -47,6 +47,7 @@ dependencies {
 	implementation libs.liquibase.core
 	liquibaseRuntime libs.liquibase.core
 	liquibaseRuntime libs.postgresql.driver
+	liquibaseRuntime libs.picocli
 
 	runtimeOnly libs.grpc
 	implementation libs.grpc.protobuf
