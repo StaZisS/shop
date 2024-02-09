@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 @Testcontainers
 @SpringJUnitConfig(classes = {AuthIntegrationTestConfiguration.class})
 public class AuthServiceIntegrationTest {
-    private static final int PORT = 6380;
+    private static final int PORT = 6379;
     @Container
     private static final RedisContainer REDIS_CONTAINER = new RedisContainer(DockerImageName.parse("redis:latest")).withExposedPorts(PORT);
 

@@ -1,6 +1,6 @@
 [versions]
 spring-boot = "3.2.2"
-testcontainer = "1.19.1"
+testcontainer = "1.19.4"
 spring-security = "6.2.1"
 jjwt = "0.12.3"
 grpc = "1.58.0"
@@ -23,8 +23,7 @@ spring-security-config = { module = "org.springframework.security:spring-securit
 testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainer" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainer" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainer" }
-spring-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
-testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version = "1.6.4"}
+testcontainers-redis = { module = "com.redis:testcontainers-redis", version = "2.0.1"}
 
 #Jooq lib
 jooq-start = { module = "org.springframework.boot:spring-boot-starter-jooq", version.ref = "spring-boot" }
