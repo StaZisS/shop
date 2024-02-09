@@ -80,7 +80,7 @@ def db = [
 		url: System.getenv('DB_URL') ?: 'jdbc:postgresql://localhost:5432/Shop',
 		username: System.getenv('DB_USERNAME') ?: 'postgres',
 		password: System.getenv('DB_PASSWORD') ?: '1489qq',
-		changelogFilePath: 'src/main/resources/db/changelog/db.changelog-init.yaml'
+		changelogFilePath: 'src/main/resources/db/changelog/db.changelog-master.yaml'
 ]
 
 liquibase {
